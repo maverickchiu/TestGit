@@ -2,6 +2,7 @@ import { _decorator, Button, Component, EditBox, instantiate, Label, math, Node,
 import { ReelController, ReelState } from './ReelController';
 import { ReelSpinner } from './ReelSpinner';
 import { IReelViewer } from './ReelController';
+import { ReelStopAnimPreset } from './ReelStopAnimPreset';
 const { ccclass, property } = _decorator;
 
 @ccclass('ControllerTest')  
@@ -43,11 +44,17 @@ export class ControllerTest extends Component implements IReelViewer {
                 this.reelController.beginSpin();
                 break;
             case ReelState.Spinning:
+                let duration = 10;
+                let elapsed = 0;
                 this.reelController.endSpin({
                     result: [22, 33, 44], 
                     offset: parseInt(this.editBox.string),
                     cycle: parseInt(this.cycleEditBox.string),
                     onStop: async (controller: ReelController) => {
+                        const sequence = ReelStopAnimPreset.createSequence();
+                        sequence.addAnim(ReelStopAnimPreset.createSlide(1, 100));
+                        sequence.addAnim(ReelStopAnimPreset.createSlide(1, -100));
+                        controller.playStopAnim(sequence);
                     }
                 });
                 break;

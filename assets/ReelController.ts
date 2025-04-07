@@ -1,5 +1,5 @@
-import { ISymbolProvider, ReelSpinner } from "./ReelSpinner";
-import { Node } from "cc";
+import { IReelStopAnim, ISymbolProvider, ReelSpinner } from "./ReelSpinner";
+import { Node, tween } from "cc";
 import { _decorator } from "cc";
 
 const { ccclass, property } = _decorator;
@@ -39,7 +39,7 @@ export class ReelController implements ISymbolProvider {
         this.Speed = 0;
         this.resultStrip = config.reelStrips;
         this.spinner.init(this);
-        this.spinner.enabled = false;
+        this.spinner.IsSpinning = false;   
     }
 
     declare private lastTime?: number;
@@ -70,7 +70,7 @@ export class ReelController implements ISymbolProvider {
             return;
         }
         this.state = ReelState.Spinning;
-        this.spinner.enabled = true;
+        this.spinner.IsSpinning = true;
         this.spinRequest = request;
         this.spinRequest?.onStateChange?.(this, ReelState.Spinning);
     }
@@ -123,7 +123,8 @@ export class ReelController implements ISymbolProvider {
         this.checkStop();
     }
 
-    async playStopAnim(){
+    async playStopAnim(anim: IReelStopAnim){
+        this.spinner.setStopAnim(anim);
     }
 
     private async checkStop() {
@@ -136,9 +137,9 @@ export class ReelController implements ISymbolProvider {
         if(maxIndex === this.stopIndex){
             this.cycle--;
             if(this.cycle < 0){
-                this.spinner.resetPosition();
-                this.spinner.enabled = false;
+                this.spinner.IsSpinning = false;
                 await this.spinResult?.onStop?.(this);
+                this.spinner.resetPosition();
                 this.state = ReelState.Idle;
                 this.spinRequest?.onStateChange?.(this, ReelState.Idle);
                 this.spinRequest = undefined;

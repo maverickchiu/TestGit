@@ -16,6 +16,11 @@ interface IViewItem {
     node: Node;
 }
 
+export interface IReelStopAnim {
+    canRunAgain(): boolean;
+    calculate(dt: number): number;
+}
+
 @ccclass('ReelSpinner')
 export class ReelSpinner extends Component {
     @property(Widget)
@@ -27,6 +32,8 @@ export class ReelSpinner extends Component {
     declare private spacing: number;
     declare private speed: number;
     declare private layout: Layout;
+    declare private isSpinning: boolean;
+    declare private stopAnim: IReelStopAnim;
 
     get Speed() {
         return this.speed;
@@ -42,6 +49,14 @@ export class ReelSpinner extends Component {
 
     get MaxIndex() {
         return this.viewItems[this.viewItems.length - 1]?.index ?? 0;
+    }
+
+    get IsSpinning() {
+        return this.isSpinning;
+    }
+
+    set IsSpinning(value: boolean) {
+        this.isSpinning = value;
     }
 
     protected onLoad(): void {
@@ -67,10 +82,21 @@ export class ReelSpinner extends Component {
         const offset = this.speed * dt;
         if(isNaN(offset))
             return;
-        this.move(offset);
+        if(this.isSpinning){
+            this.move(offset);
+        }
+        else{
+            if(this.stopAnim){
+                const offset = this.stopAnim.calculate(dt);
+                this.move(offset);
+                if(!this.stopAnim.canRunAgain()){
+                    this.stopAnim = undefined;
+                }
+            }
+        }
     }
 
-    move(offset: number) {
+    private move(offset: number) {
         assert(this.provider !== undefined, 'provider is not set');
         
         const content = this.content;
@@ -113,6 +139,10 @@ export class ReelSpinner extends Component {
 
     resetPosition() {
         this.content.bottom = 0;
+    }
+
+    setStopAnim(anim: IReelStopAnim) {
+        this.stopAnim = anim;
     }
 
     private getSymbol(index: number, type: number){
