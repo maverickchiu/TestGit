@@ -49,8 +49,8 @@ export class ControllerTest extends Component implements IReelViewer {
                     offset: parseInt(this.editBox.string),
                     cycle: parseInt(this.cycleEditBox.string),
                     onStop: async (controller: ReelController) => {
-                        const bounce = ReelStopAnimPreset.createBounce(1, 400, EasingFunctions.quadOut);
-                        await controller.playStopAnim(bounce);
+                        const shake = ReelStopAnimPreset.createShake();
+                        await controller.playStopAnim(shake); 
                     }
                 });
                 break;
