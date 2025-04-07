@@ -39,8 +39,11 @@ export class ControllerTest extends Component implements IReelViewer {
                 this.reelController.beginSpin();
                 break;
             case ReelState.Spinning:
-                const pass = parseInt(this.editBox.string);
-                this.reelController.endSpin([11, 12, 13], pass);
+                const remain = parseInt(this.editBox.string);
+                this.reelController.endSpin({
+                    result: [11, 12, 13], 
+                    remain: remain
+                });
                 break;
         }
     }

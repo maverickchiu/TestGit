@@ -9,6 +9,11 @@ export interface ReelConfig {
     speed: number;
 }
 
+export interface SpinResult {
+    result: number[];
+    remain?: number;
+}
+
 export enum ReelState {
     Idle,
     Spinning,
@@ -37,7 +42,7 @@ export class ReelController implements ISymbolProvider {
     declare private spinner: ReelSpinner;
     declare private config: ReelConfig;
     declare private state: ReelState;
-    declare private pass: number;
+    declare private remain: number;
     declare private resultStrip: number[];
 
     get Speed() {
@@ -60,21 +65,25 @@ export class ReelController implements ISymbolProvider {
         this.spinner.enabled = true;
     }
 
-    endSpin(result: number[], pass: number) {
+    endSpin(spinResult: SpinResult) {
         if(this.state !== ReelState.Spinning){
             return;
         }
-        
+
+        let {result, remain} = spinResult;
+        if(remain === undefined || remain <= 0){
+            remain = this.resultStrip.length;
+        }
         this.state = ReelState.Stopping;
         this.resultStrip = [...this.config.reelStrips];
         const size = this.resultStrip.length;
-        const startIndex = this.spinner.MaxIndex % size;
-        const insert = (startIndex - pass) % size;
+        const startIndex = (this.spinner.MaxIndex % size + size) % size;
+        const insert = ((startIndex - remain) % size + size) % size;
         for(let i = 0; i < result.length; i++) {
-            const index = (insert - i) % size;
+            const index = ((insert - i) % size + size) % size;
             this.resultStrip[index] = result[i];
         }
-        this.pass = pass + result.length;
+        this.remain = remain + result.length;
     }
 
     getSymbolType(index: number): number {
@@ -101,8 +110,8 @@ export class ReelController implements ISymbolProvider {
         if(this.state !== ReelState.Stopping){
             return;
         }
-        this.pass --;
-        if(this.pass <= 0){
+        this.remain --;
+        if(this.remain <= 0){
             this.state = ReelState.Idle;
             this.spinner.enabled = false;
         }
