@@ -68,7 +68,7 @@ export class ReelSpinner extends Component {
         this.move(offset);
     }
 
-    private move(offset: number) {
+    move(offset: number) {
         assert(this.provider !== undefined, 'provider is not set');
         
         const content = this.content;
@@ -92,7 +92,6 @@ export class ReelSpinner extends Component {
             const lastItem = viewItems[viewItems.length - 1];
             const trans = lastItem.trans;
             if(content.bottom <= -(trans.height + this.spacing)) {
-                // 销毁最上面的Symbol 之後使用pool
                 this.recycleSymbol(lastItem.node, lastItem.type);
                 viewItems.pop();
 
@@ -104,6 +103,10 @@ export class ReelSpinner extends Component {
                 this.provider.onHitBottom?.();
             }
         }
+    }
+
+    resetPosition() {
+        this.content.bottom = 0;
     }
 
     private getSymbol(index: number, type: number){

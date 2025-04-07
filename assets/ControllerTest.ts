@@ -14,6 +14,10 @@ export class ControllerTest extends Component implements IReelViewer {
     button: Button = null;
     @property(EditBox)
     editBox: EditBox = null;
+    @property(EditBox)
+    cycleEditBox: EditBox = null;
+    @property(EditBox)
+    speedEditBox: EditBox = null;
     
     declare private reelController: ReelController;
     
@@ -21,7 +25,6 @@ export class ControllerTest extends Component implements IReelViewer {
         this.button.node.on(Button.EventType.CLICK, this.onButtonClick, this);
         this.reelController = new ReelController(this, this.spinner, {
             reelStrips: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-            speed: 300,
         });
     }
 
@@ -36,13 +39,16 @@ export class ControllerTest extends Component implements IReelViewer {
     onButtonClick() {
         switch(this.reelController.State) {
             case ReelState.Idle:
+                this.reelController.Speed = parseInt(this.speedEditBox.string);
                 this.reelController.beginSpin();
                 break;
             case ReelState.Spinning:
-                const remain = parseInt(this.editBox.string);
                 this.reelController.endSpin({
                     result: [11, 12, 13], 
-                    remain: remain
+                    offset: parseInt(this.editBox.string),
+                    cycle: parseInt(this.cycleEditBox.string),
+                    onStop: async (controller: ReelController) => {
+                    }
                 });
                 break;
         }

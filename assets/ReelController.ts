@@ -6,12 +6,17 @@ const { ccclass, property } = _decorator;
 
 export interface ReelConfig {
     reelStrips: number[];
-    speed: number;
+}
+
+export interface SpinRequest {
+    onStateChange?: (controller: ReelController, state: ReelState) => void;
 }
 
 export interface SpinResult {
     result: number[];
-    remain?: number;
+    offset?: number;
+    cycle?: number;
+    onStop?: (controller: ReelController) => void;
 }
 
 export enum ReelState {
@@ -31,7 +36,7 @@ export class ReelController implements ISymbolProvider {
         this.spinner = spinner;
         this.config = config;
         this.state = ReelState.Idle;
-        this.Speed = config.speed;
+        this.Speed = 0;
         this.resultStrip = config.reelStrips;
         this.spinner.init(this);
         this.spinner.enabled = false;
@@ -42,8 +47,11 @@ export class ReelController implements ISymbolProvider {
     declare private spinner: ReelSpinner;
     declare private config: ReelConfig;
     declare private state: ReelState;
-    declare private remain: number;
+    declare private stopIndex: number;
+    declare private cycle: number;
     declare private resultStrip: number[];
+    declare private spinRequest?: SpinRequest;
+    declare private spinResult?: SpinResult;
 
     get Speed() {
         return this.spinner.Speed;
@@ -57,12 +65,14 @@ export class ReelController implements ISymbolProvider {
         return this.state;
     }
 
-    beginSpin() {
+    beginSpin(request?: SpinRequest) {
         if(this.state !== ReelState.Idle){
             return;
         }
         this.state = ReelState.Spinning;
         this.spinner.enabled = true;
+        this.spinRequest = request;
+        this.spinRequest?.onStateChange?.(this, ReelState.Spinning);
     }
 
     endSpin(spinResult: SpinResult) {
@@ -70,11 +80,16 @@ export class ReelController implements ISymbolProvider {
             return;
         }
 
-        let {result, remain} = spinResult;
+        let {result, offset: remain, cycle} = spinResult;
         if(remain === undefined || remain <= 0){
             remain = this.resultStrip.length;
         }
+        if(cycle === undefined || cycle <= 0){
+            cycle = 1;
+        }
+
         this.state = ReelState.Stopping;
+        this.spinRequest?.onStateChange?.(this, ReelState.Stopping);
         this.resultStrip = [...this.config.reelStrips];
         const size = this.resultStrip.length;
         const startIndex = (this.spinner.MaxIndex % size + size) % size;
@@ -83,7 +98,9 @@ export class ReelController implements ISymbolProvider {
             const index = ((insert - i) % size + size) % size;
             this.resultStrip[index] = result[i];
         }
-        this.remain = remain + result.length;
+        this.stopIndex = ((startIndex - remain - result.length) % size + size) % size;
+        this.cycle = cycle;
+        this.spinResult = spinResult;
     }
 
     getSymbolType(index: number): number {
@@ -106,14 +123,27 @@ export class ReelController implements ISymbolProvider {
         this.checkStop();
     }
 
-    private checkStop() {
+    async playStopAnim(){
+    }
+
+    private async checkStop() {
         if(this.state !== ReelState.Stopping){
             return;
         }
-        this.remain --;
-        if(this.remain <= 0){
-            this.state = ReelState.Idle;
-            this.spinner.enabled = false;
+
+        const size = this.resultStrip.length;
+        const maxIndex = (this.spinner.MaxIndex % size + size) % size;
+        if(maxIndex === this.stopIndex){
+            this.cycle--;
+            if(this.cycle < 0){
+                // this.spinner.resetPosition();
+                await this.spinResult?.onStop?.(this);
+                this.state = ReelState.Idle;
+                this.spinner.enabled = false;
+                this.spinRequest?.onStateChange?.(this, ReelState.Idle);
+                this.spinRequest = undefined;
+                this.spinResult = undefined;
+            }
         }
     }
 }
