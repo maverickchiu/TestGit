@@ -84,8 +84,8 @@ export class ReelController implements ISymbolProvider {
         if(remain === undefined || remain <= 0){
             remain = this.resultStrip.length;
         }
-        if(cycle === undefined || cycle <= 0){
-            cycle = 1;
+        if(cycle === undefined || cycle < 0){
+            cycle = 0;
         }
 
         this.state = ReelState.Stopping;
@@ -98,7 +98,7 @@ export class ReelController implements ISymbolProvider {
             const index = ((insert - i) % size + size) % size;
             this.resultStrip[index] = result[i];
         }
-        this.stopIndex = ((startIndex - remain - result.length) % size + size) % size;
+        this.stopIndex = ((startIndex - remain - result.length + 1) % size + size) % size;
         this.cycle = cycle;
         this.spinResult = spinResult;
     }
@@ -136,10 +136,10 @@ export class ReelController implements ISymbolProvider {
         if(maxIndex === this.stopIndex){
             this.cycle--;
             if(this.cycle < 0){
-                // this.spinner.resetPosition();
+                this.spinner.resetPosition();
+                this.spinner.enabled = false;
                 await this.spinResult?.onStop?.(this);
                 this.state = ReelState.Idle;
-                this.spinner.enabled = false;
                 this.spinRequest?.onStateChange?.(this, ReelState.Idle);
                 this.spinRequest = undefined;
                 this.spinResult = undefined;

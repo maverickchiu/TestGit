@@ -44,7 +44,7 @@ export class ControllerTest extends Component implements IReelViewer {
                 break;
             case ReelState.Spinning:
                 this.reelController.endSpin({
-                    result: [11, 12, 13], 
+                    result: [22, 33, 44], 
                     offset: parseInt(this.editBox.string),
                     cycle: parseInt(this.cycleEditBox.string),
                     onStop: async (controller: ReelController) => {

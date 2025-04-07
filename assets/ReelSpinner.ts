@@ -26,6 +26,7 @@ export class ReelSpinner extends Component {
     declare private pool: Map<number, Node[]>;
     declare private spacing: number;
     declare private speed: number;
+    declare private layout: Layout;
 
     get Speed() {
         return this.speed;
@@ -48,7 +49,8 @@ export class ReelSpinner extends Component {
         this.content.isAlignBottom = true;
         this.viewItems = [];
         this.pool = new Map<number, Node[]>();
-        this.spacing = this.content.getComponent(Layout).spacingY;
+        this.layout = this.content.getComponent(Layout);
+        this.spacing = this.layout.spacingY;
     }
 
     init(provider: ISymbolProvider) {
@@ -72,7 +74,6 @@ export class ReelSpinner extends Component {
         assert(this.provider !== undefined, 'provider is not set');
         
         const content = this.content;
-        content.bottom += offset;
         if(offset > 0) {
             // 向上
             if(content.bottom >= 0) {
@@ -81,9 +82,15 @@ export class ReelSpinner extends Component {
                 this.viewItems.shift();
 
                 const fillHeight = this.fillLowerSymbols(content);
-                this.content.getComponent(Layout).updateLayout();
+                this.layout.updateLayout();
                 content.bottom -= fillHeight;
+            }
+        } 
 
+        content.bottom += offset;
+        if(offset > 0) {
+            // 向上
+            if(content.bottom >= 0) {
                 this.provider.onHitTop?.();
             }
         } else {
@@ -97,9 +104,8 @@ export class ReelSpinner extends Component {
 
                 this.fillUpperSymbols(content);
                 
-                this.content.getComponent(Layout).updateLayout();
+                this.layout.updateLayout();
                 content.bottom += trans.height + this.spacing;
-
                 this.provider.onHitBottom?.();
             }
         }
