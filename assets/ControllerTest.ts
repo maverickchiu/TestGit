@@ -49,10 +49,8 @@ export class ControllerTest extends Component implements IReelViewer {
                     offset: parseInt(this.editBox.string),
                     cycle: parseInt(this.cycleEditBox.string),
                     onStop: async (controller: ReelController) => {
-                        const sequence = ReelStopAnimPreset.createSequence();
-                        sequence.addAnim(ReelStopAnimPreset.createSlide(1, 400, EasingFunctions.quadOut));
-                        sequence.addAnim(ReelStopAnimPreset.createSlide(1, -400, EasingFunctions.quadOut));
-                        await controller.playStopAnim(sequence);
+                        const bounce = ReelStopAnimPreset.createBounce(1, 400, EasingFunctions.quadOut);
+                        await controller.playStopAnim(bounce);
                     }
                 });
                 break;

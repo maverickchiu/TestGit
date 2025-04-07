@@ -140,8 +140,9 @@ export class ReelController implements ISymbolProvider {
             this.cycle--;
             if(this.cycle < 0){
                 this.spinner.IsSpinning = false;
-                await this.spinResult?.onStop?.(this);
+                this.stopIndex = undefined;
                 this.spinner.resetPosition();
+                await this.spinResult?.onStop?.(this);
                 this.state = ReelState.Idle;
                 this.spinRequest?.onStateChange?.(this, ReelState.Idle);
                 this.spinRequest = undefined;
