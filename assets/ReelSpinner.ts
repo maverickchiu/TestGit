@@ -34,6 +34,7 @@ export class ReelSpinner extends Component {
     declare private layout: Layout;
     declare private isSpinning: boolean;
     declare private stopAnim: IReelStopAnim;
+    declare private onEnd: () => void;
 
     get Speed() {
         return this.speed;
@@ -91,6 +92,7 @@ export class ReelSpinner extends Component {
                 this.move(offset);
                 if(!this.stopAnim.canRunAgain()){
                     this.stopAnim = undefined;
+                    this.onEnd?.();
                 }
             }
         }
@@ -141,8 +143,9 @@ export class ReelSpinner extends Component {
         this.content.bottom = 0;
     }
 
-    setStopAnim(anim: IReelStopAnim) {
+    setStopAnim(anim: IReelStopAnim, onEnd: () => void) {
         this.stopAnim = anim;
+        this.onEnd = onEnd;
     }
 
     private getSymbol(index: number, type: number){

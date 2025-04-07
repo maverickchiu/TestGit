@@ -16,7 +16,7 @@ export interface SpinResult {
     result: number[];
     offset?: number;
     cycle?: number;
-    onStop?: (controller: ReelController) => void;
+    onStop?: (controller: ReelController) => Promise<void>;
 }
 
 export enum ReelState {
@@ -124,7 +124,9 @@ export class ReelController implements ISymbolProvider {
     }
 
     async playStopAnim(anim: IReelStopAnim){
-        this.spinner.setStopAnim(anim);
+        return new Promise<void>((resolve) => {
+            this.spinner.setStopAnim(anim, resolve);
+        });
     }
 
     private async checkStop() {
