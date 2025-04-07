@@ -67,11 +67,11 @@ export class ReelController implements ISymbolProvider {
         
         this.state = ReelState.Stopping;
         this.resultStrip = [...this.config.reelStrips];
-        const size= this.resultStrip.length
-        const startIndex = (this.spinner.MaxIndex % size + size) % size;
-        const insert = ((startIndex - pass) % size + size) % size;
-        for(let i = 0; i < result.length; i++){
-            const index = ((insert - i) % size + size) % size;
+        const size = this.resultStrip.length;
+        const startIndex = this.spinner.MaxIndex % size;
+        const insert = (startIndex - pass) % size;
+        for(let i = 0; i < result.length; i++) {
+            const index = (insert - i) % size;
             this.resultStrip[index] = result[i];
         }
         this.pass = pass + result.length;
