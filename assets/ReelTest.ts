@@ -27,7 +27,7 @@ export class ReelTest extends Component implements ISymbolProvider {
         this.reel.Speed = speed;
     }
 
-    getSymbolType(index: number): number {
+    getSymbolSize(index: number): number {
         index = ((index % this.fakeReel.length) + this.fakeReel.length) % this.fakeReel.length;
         return this.fakeReel[index];
     }

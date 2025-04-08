@@ -29,7 +29,7 @@ export class ControllerTest extends Component implements IReelViewer {
         });
     }
 
-    getSymbolNode(symbol: number, type: number, node: Node): Node {
+    getSymbolNode(symbol: number, size: number, node: Node): Node {
         if(!node) {
             node = instantiate(this.prefab);
         }

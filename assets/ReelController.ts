@@ -26,7 +26,7 @@ export enum ReelState {
 }
 
 export interface IReelViewer {
-    getSymbolNode(symbol: number, type: number, node: Node): Node;
+    getSymbolNode(symbol: number, size: number, node: Node): Node;
 }
 
 @ccclass('ReelController')
@@ -103,16 +103,16 @@ export class ReelController implements ISymbolProvider {
         this.spinResult = spinResult;
     }
 
-    getSymbolType(index: number): number {
-        return 0;
+    getSymbolSize(index: number): number {
+        return 1;
     }
 
-    getSymbolNode(index: number, type: number, node: Node): Node {
+    getSymbolNode(index: number, size: number, node: Node): Node {
         const reelStripSize = this.resultStrip.length;
         index = ((index % reelStripSize) + reelStripSize) % reelStripSize;
 
         const symbol = this.resultStrip[index];
-        return this.viewer.getSymbolNode(symbol, type, node);
+        return this.viewer.getSymbolNode(symbol, size, node);
     }
 
     onHitTop() {

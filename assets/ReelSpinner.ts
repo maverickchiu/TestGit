@@ -1,9 +1,9 @@
-import { _decorator, assert, Component, Layout, Node, UITransform, Widget } from 'cc';
+import { _decorator, assert, Component, Node, UITransform, Widget } from 'cc';
 const { ccclass, property } = _decorator;
 
 export interface ISymbolProvider {
-    getSymbolType(index: number): number;
-    getSymbolNode(index: number, type: number, node: Node): Node;
+    getSymbolSize(index: number): number;
+    getSymbolNode(index: number, size: number, node: Node): Node;
 
     onHitTop?(): void;
     onHitBottom?(): void;
@@ -11,8 +11,8 @@ export interface ISymbolProvider {
 
 interface IViewItem {
     index: number;
-    type: number;
-    trans: UITransform;
+    size: number;
+    widget: Widget;
     node: Node;
 }
 
@@ -25,13 +25,17 @@ export interface IReelStopAnim {
 export class ReelSpinner extends Component {
     @property(Widget)
     private content: Widget = null;
+    @property
+    private spacing: number = 0;
+    @property
+    private unitHeight: number = 0;
 
+    declare private contentTrans: UITransform;
+    declare private viewTrans: UITransform;
     declare private viewItems: IViewItem[];
     declare private provider: ISymbolProvider;
     declare private pool: Map<number, Node[]>;
-    declare private spacing: number;
     declare private speed: number;
-    declare private layout: Layout;
     declare private isSpinning: boolean;
     declare private stopAnim: IReelStopAnim;
     declare private onEnd: () => void;
@@ -61,12 +65,12 @@ export class ReelSpinner extends Component {
     }
 
     protected onLoad(): void {
+        this.contentTrans = this.content.getComponent(UITransform);
+        this.viewTrans = this.getComponent(UITransform);
         this.content.isAlignTop = false;
         this.content.isAlignBottom = true;
         this.viewItems = [];
         this.pool = new Map<number, Node[]>();
-        this.layout = this.content.getComponent(Layout);
-        this.spacing = this.layout.spacingY;
     }
 
     init(provider: ISymbolProvider) {
@@ -77,6 +81,7 @@ export class ReelSpinner extends Component {
 
     private initSymbol() {
         this.fillUpperSymbols(this.content);
+        this.relayout();
     }
 
     protected update(dt: number): void {
@@ -106,11 +111,11 @@ export class ReelSpinner extends Component {
             // 向上
             if(content.bottom >= 0) {
                 const firstItem = this.viewItems[0];
-                this.recycleSymbol(firstItem.node, firstItem.type);
+                this.recycleSymbol(firstItem.node, firstItem.size);
                 this.viewItems.shift();
 
                 const fillHeight = this.fillLowerSymbols(content);
-                this.layout.updateLayout();
+                this.relayout();
                 content.bottom -= fillHeight;
             }
         } 
@@ -125,15 +130,15 @@ export class ReelSpinner extends Component {
             // 向下
             const viewItems = this.viewItems;
             const lastItem = viewItems[viewItems.length - 1];
-            const trans = lastItem.trans;
-            if(content.bottom <= -(trans.height + this.spacing)) {
-                this.recycleSymbol(lastItem.node, lastItem.type);
+            const height = this.calculateHeight(lastItem);
+            if(content.bottom <= -(height + this.spacing)) {
+                this.recycleSymbol(lastItem.node, lastItem.size);
                 viewItems.pop();
 
                 this.fillUpperSymbols(content);
                 
-                this.layout.updateLayout();
-                content.bottom += trans.height + this.spacing;
+                this.relayout();
+                content.bottom += height + this.spacing;
                 this.provider.onHitBottom?.();
             }
         }
@@ -148,31 +153,63 @@ export class ReelSpinner extends Component {
         this.onEnd = onEnd;
     }
 
-    private getSymbol(index: number, type: number){
-        let nodes = this.pool.get(type);
-        if(!nodes){
-            nodes = [];
-            this.pool.set(type, nodes);
+    private relayout(){
+        const viewItems = this.viewItems;
+        let curHeight = 0;
+        for(let i = viewItems.length - 1; i >= 0; i--){  
+            const item = viewItems[i];
+            if(curHeight !== 0){
+                curHeight += this.spacing;
+            }
+            item.widget.bottom = curHeight;
+
+            for(let j = 0; j < item.size; j++){
+                if(j > 0){
+                    curHeight += this.spacing;
+                }
+                curHeight += this.unitHeight;
+            }
         }
-        const node = nodes.pop();
-        return this.provider.getSymbolNode(index, type, node);
+        const bottom = this.content.bottom;
+        this.contentTrans.height = curHeight;
+        this.content.bottom = bottom;
     }
 
-    private recycleSymbol(node: Node, type: number) {
+    private getSymbol(index: number, size: number){
+        let nodes = this.pool.get(size);
+        if(!nodes){
+            nodes = [];
+            this.pool.set(size, nodes);
+        }
+        const node = nodes.pop();
+        return this.provider.getSymbolNode(index, size, node);
+    }
+
+    private recycleSymbol(node: Node, size: number) {
         node.parent = null;
-        const nodes = this.pool.get(type);
+        const nodes = this.pool.get(size);
         nodes.push(node);
     }
 
+    private calculateHeight(viewItem: IViewItem){
+        let curHeight = 0;
+        for(let i = 0; i < viewItem.size; i++){
+            if(i > 0){
+                curHeight += this.spacing;
+            }
+            curHeight += this.unitHeight;
+        }
+        return curHeight;
+    }
+
     private fillLowerSymbols(content: Widget){
-        const viewTrans = this.getComponent(UITransform);
-        const height = viewTrans.height * 2;
+        const height = this.viewTrans.height * 2;
 
         const contentNode = content.node;
         const viewItems = this.viewItems;
         let curHeight = 0;
         for (const item of viewItems) {
-            curHeight += item.trans.height;
+            curHeight += this.calculateHeight(item);
         }
         curHeight += Math.max(0,this.spacing * (viewItems.length - 1));
 
@@ -181,33 +218,43 @@ export class ReelSpinner extends Component {
             // 生成新的Symbol放在最下面
             const nowMinIndex = viewItems[viewItems.length - 1]?.index ?? 0;
             const newIndex = nowMinIndex - 1;
-            const type = this.provider.getSymbolType(newIndex);
-            const symbol = this.getSymbol(newIndex, type);
-            const newItem = {
+            const size = this.provider.getSymbolSize(newIndex);
+            const symbol = this.getSymbol(newIndex, size);
+            const newItem: IViewItem = {
                 index: newIndex,
-                type: type,
-                trans: symbol.getComponent(UITransform),
+                size: size,
+                widget: this.tryGetWidget(symbol),
                 node: symbol,
             };
             viewItems.push(newItem);
 
             symbol.parent = contentNode;
             symbol.setSiblingIndex(viewItems.length - 1);
-            curHeight += newItem.trans.height + this.spacing;
-            fillHeight += newItem.trans.height + this.spacing;
+            const newItemHeight = this.calculateHeight(newItem);
+            curHeight += newItemHeight + this.spacing;
+            fillHeight += newItemHeight + this.spacing;
         }
 
         return fillHeight;
     }
 
+    private tryGetWidget(node: Node){
+        let widget = node.getComponent(Widget);
+        if(!widget){
+            widget = node.addComponent(Widget);
+            widget.isAlignBottom = true;
+            widget.isAbsoluteBottom = true;
+        }
+        return widget;
+    }
+
     private fillUpperSymbols(content: Widget){
-        const viewTrans = this.getComponent(UITransform);
-        const height = viewTrans.height * 2;
+        const height = this.viewTrans.height * 2;
 
         const viewItems = this.viewItems;
         let curHeight = 0;
         for (const item of viewItems) {
-            curHeight += item.trans.height;
+            curHeight += this.calculateHeight(item);
         }
         curHeight += Math.max(0,this.spacing * (viewItems.length - 1));
 
@@ -215,18 +262,18 @@ export class ReelSpinner extends Component {
             // 生成新的Symbol放在最上面
             const nowMaxIndex = viewItems[0]?.index;
             const newIndex = nowMaxIndex !== undefined ? nowMaxIndex + 1 : 0;
-            const type = this.provider.getSymbolType(newIndex);
-            const symbol = this.getSymbol(newIndex, type);
-            const newItem = {
+            const size = this.provider.getSymbolSize(newIndex);
+            const symbol = this.getSymbol(newIndex, size);
+            const newItem: IViewItem = {
                 index: newIndex,
-                type: type,
-                trans: symbol.getComponent(UITransform),
+                size: size,
+                widget: this.tryGetWidget(symbol),
                 node: symbol,
             };
             viewItems.unshift(newItem);
             symbol.parent = content.node;
             symbol.setSiblingIndex(0);
-            curHeight += newItem.trans.height + this.spacing;
+            curHeight += this.calculateHeight(newItem) + this.spacing;
         }
     }
 }
