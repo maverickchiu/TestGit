@@ -2,7 +2,7 @@ import { _decorator, Button, Component, EditBox, instantiate, Label, math, Node,
 import { ReelController, ReelState } from './ReelController';
 import { ReelSpinner } from './ReelSpinner';
 import { IReelViewer } from './ReelController';
-import { EasingFunctions, ReelStopAnimPreset } from './ReelStopAnimPreset';
+import { ReelStopAnimPreset } from './ReelStopAnimPreset';
 const { ccclass, property } = _decorator;
 
 @ccclass('ControllerTest')  
