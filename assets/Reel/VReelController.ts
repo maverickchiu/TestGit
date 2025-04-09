@@ -11,14 +11,20 @@ export interface VReelSymbolProvider {
     getSymbolNode(symbol: number, item: Widget): Widget;
 }
 
-export interface IVReelControllerConfig {
+export interface VReelConfig {
     provider: VReelSymbolProvider;
     reel: VReel;
     strip: number[];
 }
 
+export interface VReelStopRequest {
+    step: number;
+    result: number[];
+    onStop?: (controller: VReelController) => void;
+}
+
 export class VReelController implements IVReelController {
-    constructor(config: IVReelControllerConfig) {
+    constructor(config: VReelConfig) {
         this.provider = config.provider;
         this.reel = config.reel;
         this.strip = config.strip;
@@ -31,6 +37,7 @@ export class VReelController implements IVReelController {
     declare private state: VReelState;
     declare private strip: number[];
     declare private onStateChange: (controller: VReelController) => void;
+    declare private stopRequest: VReelStopRequest;
 
     get State() {
         return this.state;
@@ -53,13 +60,24 @@ export class VReelController implements IVReelController {
         this.setState(VReelState.Spinning);
     }
 
-    endSpin() {
+    quickStop() {
+        if(this.state !== VReelState.Stopping)
+            return;
+    }
+
+    endSpin(request: VReelStopRequest) {
         if(this.state !== VReelState.Spinning)
             return;
         this.setState(VReelState.Stopping);
-        setTimeout(() => {
-            this.setState(VReelState.Idle);
-        }, 1000);
+
+        const stripSize = this.strip.length;
+        const result = request.result;
+        const offset = (this.reel.MinVisibleIndex + request.step) % stripSize - result.length + 1;
+        for(let i = 0; i < result.length; i++) {
+            const index = (result[i] + offset) % stripSize;
+            this.strip[index] = result[i];
+        }
+        this.stopRequest = request;
     }
 
     private setState(state: VReelState) {
@@ -80,5 +98,16 @@ export class VReelController implements IVReelController {
         const offset = (index % stripSize + stripSize) % stripSize;
         const symbol = this.strip[offset];
         return this.provider.getSymbolNode(symbol, item);
+    }
+
+    onSymbolChanged(reel: VReel): void {
+        if( this.stopRequest) {
+            this.stopRequest.step--;
+            if(this.stopRequest.step <= 0) {
+                this.setState(VReelState.Idle);
+                this.stopRequest.onStop?.(this);
+                this.stopRequest = null;
+            }
+        }
     }
 }

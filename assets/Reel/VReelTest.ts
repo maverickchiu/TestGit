@@ -15,6 +15,8 @@ export class VReelTest extends Component implements VReelSymbolProvider {
 
     @property(Button)
     private spinButton: Button = null;
+    @property(Button)
+    private resetButton: Button = null;
 
     declare private controller: VReelController;
 
@@ -29,17 +31,32 @@ export class VReelTest extends Component implements VReelSymbolProvider {
         });
         this.updateButtonView();
         this.spinButton.node.on(Button.EventType.CLICK, this.onSpin, this);
+        this.resetButton.node.on(Button.EventType.CLICK, this.onReset, this);
     }
+
+protected update(dt: number): void {
+    this.reel.Speed = this.speed;
+}
 
     private onSpin() {
         switch(this.controller.State) {
             case VReelState.Spinning:
-                this.controller.endSpin();
+                this.controller.endSpin({
+                    step: 10,
+                    result: [22,33,44],
+                    onStop: () => {
+                        console.log("onStop");
+                    }
+                });
                 break;
             case VReelState.Idle:
                 this.controller.beginSpin();
                 break;
         }
+    }
+
+    private onReset() {
+        this.controller.resetSymbols([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
     }
 
     private updateButtonView(){

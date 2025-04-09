@@ -4,6 +4,7 @@ const { ccclass, property } = _decorator;
 
 export interface IVReelController {
     getSymbolNode(index: number, item: Widget): Widget;
+    onSymbolChanged(reel: VReel): void;
 }
 
 interface IVReelItem {
@@ -50,6 +51,10 @@ export class VReel extends Component {
         this.isSpinning = value;
     }
 
+    get MinVisibleIndex() {
+        return Math.round(this.position / this.itemSize);
+    }
+
     protected onLoad(): void {
         this.viewTrans = this.getComponent(UITransform);
         this.items = [];
@@ -78,7 +83,7 @@ export class VReel extends Component {
             return;
 
         const offset = this.speed * dt;
-        this.setPosition(this.position + offset);
+        this.setPosition(this.position - offset);
     }
 
     private setPosition(position: number) {
@@ -89,13 +94,15 @@ export class VReel extends Component {
     private refreshView(){
         const min = this.position;
         const max = min + this.viewTrans.height;
-        const elementMin = Math.floor(min / this.itemSize) - 1;
+        const elementMin = Math.floor(min / this.itemSize);
         if(elementMin !== this.prevMinIndex) {
             this.prevMinIndex = elementMin;
             const elementMax = Math.floor(max / this.itemSize) + 1;
 
             this.removeInvisibleItems(elementMin, elementMax);
             this.addVisibleItems(elementMin, elementMax);
+
+            this.controller.onSymbolChanged(this);
         }
         this.relayout();
     }
@@ -144,8 +151,11 @@ export class VReel extends Component {
     private relayout(){
         const items = this.items;
 
-        const offset = -this.itemSize -this.position % this.itemSize;
+        const offset = -this.position % this.itemSize;
         let curHeight = offset;
+        if(this.position < 0) {
+            curHeight -= this.itemSize;
+        }
         for(let i = 0; i < items.length; i++) {
             const item = items[i];
             item.widget.bottom = curHeight;
