@@ -2,7 +2,7 @@ import { Component, UITransform, Widget } from "cc";
 import { _decorator } from "cc";
 const { ccclass, property } = _decorator;
 
-export interface VReelProvider {
+export interface IVReelController {
     getSymbolNode(index: number, item: Widget): Widget;
 }
 
@@ -27,11 +27,12 @@ export class VReel extends Component {
     }
 
     declare private viewTrans: UITransform;
-    declare private provider: VReelProvider;
+    declare private controller: IVReelController;
     declare private items: IVReelItem[];
     declare private pool: Widget[];
     declare private prevMinIndex: number;
     declare private visibleIndexes: Set<number>;
+    declare private isSpinning: boolean;
     
     get Speed() {
         return this.speed;
@@ -41,6 +42,14 @@ export class VReel extends Component {
         this.speed = value;
     }
 
+    get IsSpinning() {
+        return this.isSpinning;
+    }
+
+    set IsSpinning(value: boolean) {
+        this.isSpinning = value;
+    }
+
     protected onLoad(): void {
         this.viewTrans = this.getComponent(UITransform);
         this.items = [];
@@ -48,13 +57,24 @@ export class VReel extends Component {
         this.visibleIndexes = new Set();
     }
 
-    init(provider: VReelProvider) {
-        this.provider = provider;
+    init(controller: IVReelController) {
+        this.controller = controller;
+        this.setPosition(0);
+    }
+
+    rebuild(){
+        this.items.forEach(item => {
+            this.pool.push(item.widget);
+            item.widget.node.parent = null;
+        });
+        this.items.length = 0;
         this.setPosition(0);
     }
 
     protected update(dt: number): void {
-        if(!this.provider) 
+        if(!this.controller) 
+            return;
+        if(!this.isSpinning)
             return;
 
         const offset = this.speed * dt;
@@ -104,7 +124,7 @@ export class VReel extends Component {
                 continue;
             }
             const widget = this.pool.pop();
-            const item = this.provider.getSymbolNode(i, widget);
+            const item = this.controller.getSymbolNode(i, widget);
             item.isAlignBottom = true;
             item.isAbsoluteBottom = true;
             item.node.parent = this.node;
