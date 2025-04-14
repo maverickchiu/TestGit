@@ -2,6 +2,7 @@ import { Button, Component, instantiate, Label, Prefab, Widget } from "cc";
 import { VReel } from "./VReel";
 import { _decorator } from "cc";
 import { VReelController, VReelState, VReelSymbolProvider } from "./VReelController";
+import { VReelStopAnimPreset } from "./Anims/VReelStopAnimPreset";
 const { ccclass, property } = _decorator;
 
 @ccclass('VReelTest')
@@ -46,8 +47,9 @@ protected update(dt: number): void {
                 this.controller.endSpin({
                     step: 60,
                     result: [22,33,44],
-                    onStop: () => {
-                        console.log("onStop");
+                    onStop: async (controller: VReelController) => {
+                        const shake = VReelStopAnimPreset.createShake();
+                        await controller.playStopAnim(shake); 
                     }
                 });
                 break;

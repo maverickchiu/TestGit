@@ -12,6 +12,11 @@ interface IVReelItem {
     widget: Widget;
 }
 
+export interface IVReelStopAnim {
+    canRunAgain(): boolean;
+    calculate(dt: number): number;
+}
+
 @ccclass('VReel')
 export class VReel extends Component {
     @property
@@ -34,6 +39,9 @@ export class VReel extends Component {
     declare private prevMinIndex: number;
     declare private visibleIndexes: Set<number>;
     declare private isSpinning: boolean;
+
+    declare private stopAnim: IVReelStopAnim;
+    declare private onEnd: () => void;
     
     get Speed() {
         return this.speed;
@@ -84,14 +92,28 @@ export class VReel extends Component {
         this.setPosition(0);
     }
 
+    setStopAnim(anim: IVReelStopAnim, onEnd: () => void) {
+        this.stopAnim = anim;
+        this.onEnd = onEnd;
+    }
+
     protected update(dt: number): void {
         if(!this.controller) 
             return;
-        if(!this.isSpinning)
-            return;
-
-        const offset = this.speed * dt;
-        this.setPosition(this.position - offset);
+        if(this.isSpinning){
+            const offset = this.speed * dt;
+            this.setPosition(this.position - offset);
+        }
+        else{
+            if(this.stopAnim){
+                const offset = this.stopAnim.calculate(dt);
+                this.setPosition(this.position - offset);
+                if(!this.stopAnim.canRunAgain()){
+                    this.stopAnim = undefined;
+                    this.onEnd?.();
+                }
+            }
+        }
     }
 
     private setPosition(position: number) {

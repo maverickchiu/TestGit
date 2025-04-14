@@ -1,10 +1,11 @@
 import { Widget } from "cc";
-import { VReel, IVReelController as IVReelController } from "./VReel";
+import { VReel, IVReelController as IVReelController, IVReelStopAnim } from "./VReel";
 
 export enum VReelState {
     Idle,
     Spinning,
     Stopping,
+    StopAnim,
 }
 
 export interface VReelSymbolProvider {
@@ -20,7 +21,7 @@ export interface VReelConfig {
 export interface VReelStopRequest {
     step: number;
     result: number[];
-    onStop?: (controller: VReelController) => void;
+    onStop?: (controller: VReelController) => Promise<void>;
 }
 
 export class VReelController implements IVReelController {
@@ -102,10 +103,7 @@ export class VReelController implements IVReelController {
         if(this.state !== VReelState.Stopping)
             return;
         this.hasQuickStop = true;
-        const visibleCount = this.reel.VisibleCount;
-        if(this.stopRequest.step < visibleCount) 
-            return;
-        this.stopRequest.step %= this.currentStrip.length;
+        this.stopRequest.step = 0;
         this.setStopRequest(this.stopRequest);
     }
 
@@ -122,6 +120,7 @@ export class VReelController implements IVReelController {
             case VReelState.Spinning:
                 this.reel.IsSpinning = true;
                 break;
+            case VReelState.StopAnim:
             case VReelState.Idle:
                 this.reel.IsSpinning = false;
                 break;
@@ -136,13 +135,21 @@ export class VReelController implements IVReelController {
         return this.provider.getSymbolNode(symbol, item, index);
     }
 
-    onSymbolChanged(reel: VReel): void {
+    async onSymbolChanged(reel: VReel): Promise<void> {
         if( this.stopRequest) {
             if(this.stopIndex === reel.MinVisibleIndex) {
-                this.setState(VReelState.Idle);
-                this.stopRequest.onStop?.(this);
+                this.setState(VReelState.StopAnim);
+                const onStop = this.stopRequest.onStop;
                 this.stopRequest = null;
+                await onStop?.(this);
+                this.setState(VReelState.Idle);
             }
         }
+    }
+
+    playStopAnim(anim: IVReelStopAnim){
+        return new Promise<void>((resolve) => {
+            this.reel.setStopAnim(anim, resolve);
+        });
     }
 }
