@@ -8,7 +8,7 @@ export enum VReelState {
 }
 
 export interface VReelSymbolProvider {
-    getSymbolNode(symbol: number, item: Widget): Widget;
+    getSymbolNode(symbol: number, item: Widget, index?: number): Widget;
 }
 
 export interface VReelConfig {
@@ -27,7 +27,8 @@ export class VReelController implements IVReelController {
     constructor(config: VReelConfig) {
         this.provider = config.provider;
         this.reel = config.reel;
-        this.strip = config.strip;
+        this.initStrip = config.strip;
+        this.currentStrip = config.strip.slice();
         this.state = VReelState.Idle;
         this.reel.init(this);
     }
@@ -35,9 +36,12 @@ export class VReelController implements IVReelController {
     declare private provider: VReelSymbolProvider;
     declare private reel: VReel;
     declare private state: VReelState;
-    declare private strip: number[];
+    declare private initStrip: number[];
+    declare private currentStrip: number[];
     declare private onStateChange: (controller: VReelController) => void;
+    declare private hasQuickStop: boolean;
     declare private stopRequest: VReelStopRequest;
+    declare private stopIndex: number;
 
     get State() {
         return this.state;
@@ -50,34 +54,66 @@ export class VReelController implements IVReelController {
     resetSymbols(strip: number[]) {
         if(this.state !== VReelState.Idle)
             return;
-        this.strip = strip;
+        this.initStrip = strip;
+        this.currentStrip = strip;
         this.reel.rebuild();
     }
 
     beginSpin() {
         if(this.state !== VReelState.Idle)
             return;
+        this.hasQuickStop = false;
         this.setState(VReelState.Spinning);
     }
 
+    private setStopRequest(request: VReelStopRequest) {
+        this.currentStrip.length = 0;
+        this.currentStrip.push(...this.initStrip);
+        const stripSize = this.initStrip.length;
+        const result = request.result;
+        const visibleCount = this.reel.VisibleCount;
+        const minStep = Math.max(request.step, visibleCount);
+        request.step = minStep;
+        const minVisibleIndex = this.reel.MinVisibleIndex;
+        const minOffset = (minVisibleIndex % stripSize + stripSize) % stripSize;
+        if(this.reel.Speed < 0){
+            const offset = (minOffset + minStep) % stripSize;
+            for(let i = 0; i < result.length; i++) {
+                const index = (i + offset) % stripSize;
+                this.currentStrip[index] = result[i];
+            }
+            this.stopIndex = minVisibleIndex + minStep + 1;
+        }
+        else{
+            const offset = minOffset - minStep;
+            for(let i = 0; i < result.length; i++) {
+                const index = (((offset + i) % stripSize) + stripSize) % stripSize;
+                this.currentStrip[index] = result[i];
+            }
+            this.stopIndex = minVisibleIndex - minStep;
+        }
+
+        this.stopRequest = request;
+    }
+
     quickStop() {
+        if(this.hasQuickStop)
+            return;
         if(this.state !== VReelState.Stopping)
             return;
+        this.hasQuickStop = true;
+        const visibleCount = this.reel.VisibleCount;
+        if(this.stopRequest.step < visibleCount) 
+            return;
+        this.stopRequest.step %= this.currentStrip.length;
+        this.setStopRequest(this.stopRequest);
     }
 
     endSpin(request: VReelStopRequest) {
         if(this.state !== VReelState.Spinning)
             return;
         this.setState(VReelState.Stopping);
-
-        const stripSize = this.strip.length;
-        const result = request.result;
-        const offset = (this.reel.MinVisibleIndex + request.step) % stripSize - result.length + 1;
-        for(let i = 0; i < result.length; i++) {
-            const index = (result[i] + offset) % stripSize;
-            this.strip[index] = result[i];
-        }
-        this.stopRequest = request;
+        this.setStopRequest(request);
     }
 
     private setState(state: VReelState) {
@@ -94,16 +130,15 @@ export class VReelController implements IVReelController {
     }
 
     getSymbolNode(index: number, item: Widget): Widget {
-        const stripSize = this.strip.length;
+        const stripSize = this.currentStrip.length;
         const offset = (index % stripSize + stripSize) % stripSize;
-        const symbol = this.strip[offset];
-        return this.provider.getSymbolNode(symbol, item);
+        const symbol = this.currentStrip[offset];
+        return this.provider.getSymbolNode(symbol, item, index);
     }
 
     onSymbolChanged(reel: VReel): void {
         if( this.stopRequest) {
-            this.stopRequest.step--;
-            if(this.stopRequest.step <= 0) {
+            if(this.stopIndex === reel.MinVisibleIndex) {
                 this.setState(VReelState.Idle);
                 this.stopRequest.onStop?.(this);
                 this.stopRequest = null;

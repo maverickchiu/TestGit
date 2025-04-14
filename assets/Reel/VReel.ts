@@ -52,7 +52,15 @@ export class VReel extends Component {
     }
 
     get MinVisibleIndex() {
-        return Math.round(this.position / this.itemSize);
+        return Math.ceil(this.position / this.itemSize);
+    }
+
+    get MaxVisibleIndex() {
+        return Math.ceil((this.position + this.viewTrans.height) / this.itemSize);
+    }
+
+    get VisibleCount() {
+        return this.MaxVisibleIndex - this.MinVisibleIndex + 1;
     }
 
     protected onLoad(): void {
@@ -95,16 +103,19 @@ export class VReel extends Component {
         const min = this.position;
         const max = min + this.viewTrans.height;
         const elementMin = Math.floor(min / this.itemSize);
-        if(elementMin !== this.prevMinIndex) {
+        const symbolChanged = elementMin !== this.prevMinIndex;
+        if(symbolChanged) {
             this.prevMinIndex = elementMin;
             const elementMax = Math.floor(max / this.itemSize) + 1;
 
             this.removeInvisibleItems(elementMin, elementMax);
             this.addVisibleItems(elementMin, elementMax);
-
-            this.controller.onSymbolChanged(this);
         }
         this.relayout();
+
+        if(symbolChanged) {
+            this.controller.onSymbolChanged(this);
+        }
     }
 
     private removeInvisibleItems(min: number, max: number){

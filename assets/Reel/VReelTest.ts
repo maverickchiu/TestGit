@@ -19,12 +19,14 @@ export class VReelTest extends Component implements VReelSymbolProvider {
     private resetButton: Button = null;
 
     declare private controller: VReelController;
+    declare private strip: number[];
 
     protected start(): void {
+        this.strip = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         this.controller = new VReelController({
             provider: this,
             reel: this.reel,
-            strip: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+            strip: this.strip
         });
         this.controller.setOnStateChange(controller=>{
             this.updateButtonView();
@@ -42,12 +44,15 @@ protected update(dt: number): void {
         switch(this.controller.State) {
             case VReelState.Spinning:
                 this.controller.endSpin({
-                    step: 10,
+                    step: 60,
                     result: [22,33,44],
                     onStop: () => {
                         console.log("onStop");
                     }
                 });
+                break;
+            case VReelState.Stopping:
+                this.controller.quickStop();
                 break;
             case VReelState.Idle:
                 this.controller.beginSpin();
@@ -56,23 +61,35 @@ protected update(dt: number): void {
     }
 
     private onReset() {
-        this.controller.resetSymbols([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+        this.controller.resetSymbols(this.strip);
     }
 
     private updateButtonView(){
         const state = this.controller.State;
         const label = this.spinButton.getComponentInChildren(Label);
-        const text = state === VReelState.Idle ? "Spin" : "Stop";
-        label.string = text;
+        switch(state) {
+            case VReelState.Spinning:
+                label.string = "Stop";
+                break;
+            case VReelState.Stopping:
+                label.string = "Quick Stop";
+                break;
+            case VReelState.Idle:
+                label.string = "Spin";
+                break;
+        }
     }
 
-    getSymbolNode(symbol: number, item: Widget): Widget {
+    getSymbolNode(symbol: number, item: Widget, index: number): Widget {
         if(!item) {
             const symbol = instantiate(this.symbolPrefab);
             item = symbol.getComponent(Widget);
         }
 
-        item.getComponentInChildren(Label).string = symbol.toString();
+        const stripSize = this.strip.length;
+        const offset = (index % stripSize + stripSize) % stripSize;
+        const label = `${symbol}/${index}/${offset}`;
+        item.getComponentInChildren(Label).string = label;
         return item;
     }
 }
