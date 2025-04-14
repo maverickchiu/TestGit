@@ -5,10 +5,17 @@ import { VReelController, VReelState, VReelSymbolProvider } from "./VReelControl
 import { VReelStopAnimPreset } from "./Anims/VReelStopAnimPreset";
 const { ccclass, property } = _decorator;
 
+enum ButtonState {
+    CanSpin,
+    CanStop,
+    CanQuickStop,
+    WaitForStopAnim,
+}
+
 @ccclass('VReelTest')
 export class VReelTest extends Component implements VReelSymbolProvider {
     @property(VReel)
-    private reel: VReel = null;
+    private reels: VReel[] = [];
     @property(Prefab)
     private symbolPrefab: Prefab = null;
     @property
@@ -19,71 +26,111 @@ export class VReelTest extends Component implements VReelSymbolProvider {
     @property(Button)
     private resetButton: Button = null;
 
-    declare private controller: VReelController;
+    declare private controllers: VReelController[];
     declare private strip: number[];
+    declare private state: ButtonState;
 
     protected start(): void {
         this.strip = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-        this.controller = new VReelController({
-            provider: this,
-            reel: this.reel,
-            strip: this.strip
-        });
-        this.controller.setOnStateChange(controller=>{
-            this.updateButtonView();
-        });
+        this.controllers = [];
+        for (let i = 0; i < this.reels.length; i++) {
+            const reel = this.reels[i];
+            const controller = new VReelController({
+                provider: this,
+                reel: reel,
+                strip: this.strip
+            });
+            this.controllers.push(controller);
+            controller.setOnStateChange(controller => {
+                this.updateButtonView();
+            });
+        }
+        this.state = ButtonState.CanSpin;
         this.updateButtonView();
         this.spinButton.node.on(Button.EventType.CLICK, this.onSpin, this);
         this.resetButton.node.on(Button.EventType.CLICK, this.onReset, this);
     }
 
-protected update(dt: number): void {
-    this.reel.Speed = this.speed;
-}
+    protected update(dt: number): void {
+        this.reels.forEach(reel => {
+            reel.Speed = this.speed;
+        });
+    }
 
     private onSpin() {
-        switch(this.controller.State) {
-            case VReelState.Spinning:
-                this.controller.endSpin({
-                    step: 60,
-                    result: [22,33,44],
-                    onStop: async (controller: VReelController) => {
-                        const shake = VReelStopAnimPreset.createShake();
-                        await controller.playStopAnim(shake); 
-                    }
-                });
-                break;
-            case VReelState.Stopping:
-                this.controller.quickStop();
-                break;
-            case VReelState.Idle:
-                this.controller.beginSpin();
-                break;
+        for (let i = 0; i < this.controllers.length; i++) {
+            const controller = this.controllers[i];
+            switch (this.state) {
+                case ButtonState.CanStop:
+                    controller.endSpin({
+                        step: i * 4 + 4,
+                        result: [22, 33, 44],
+                        onStop: async (controller: VReelController) => {
+                            const shake = VReelStopAnimPreset.createShake();
+                            await controller.playStopAnim(shake);
+                        }
+                    });
+                    break;
+                case ButtonState.CanQuickStop:
+                    controller.quickStop();
+                    break;
+                case ButtonState.CanSpin:
+                    controller.beginSpin();
+                    break;
+            }
         }
     }
 
     private onReset() {
-        this.controller.resetSymbols(this.strip);
+        this.controllers.forEach(controller => {
+            controller.resetSymbols(this.strip);
+        });
     }
 
-    private updateButtonView(){
-        const state = this.controller.State;
-        const label = this.spinButton.getComponentInChildren(Label);
-        switch(state) {
-            case VReelState.Spinning:
-                label.string = "Stop";
-                break;
-            case VReelState.Stopping:
-                label.string = "Quick Stop";
-                break;
-            case VReelState.Idle:
-                label.string = "Spin";
+    private updateButtonView() {
+        const controllers = this.controllers;
+        let buttonState = ButtonState.CanSpin;
+        for (let i = 0; i < controllers.length; i++) {
+            const controller = controllers[i];
+            const state = controller.State;
+            switch (state) {
+                case VReelState.Spinning:
+                    buttonState = ButtonState.CanStop;
+                    break;
+                case VReelState.Stopping:
+                    buttonState = ButtonState.CanQuickStop;
+                    break;
+                case VReelState.StopAnim:
+                    buttonState = ButtonState.WaitForStopAnim;
+                    break;
+                case VReelState.Idle:
+                    break;
+            }
+
+            if(buttonState !== ButtonState.CanSpin)
                 break;
         }
+
+        const label = this.spinButton.getComponentInChildren(Label);
+        switch (buttonState) {
+            case ButtonState.CanStop:
+                label.string = "Stop";
+                break;
+            case ButtonState.CanQuickStop:
+                label.string = "Quick Stop";
+                break;
+            case ButtonState.WaitForStopAnim:
+                label.string = "Wait";
+                break;
+        }
+
+        setTimeout(() => {
+            this.state = buttonState;
+        }, 10);
     }
 
     getSymbolNode(symbol: number, item: Widget, index: number): Widget {
-        if(!item) {
+        if (!item) {
             const symbol = instantiate(this.symbolPrefab);
             item = symbol.getComponent(Widget);
         }
@@ -95,4 +142,3 @@ protected update(dt: number): void {
         return item;
     }
 }
-    

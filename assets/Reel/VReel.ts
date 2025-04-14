@@ -111,6 +111,9 @@ export class VReel extends Component {
                 if(!this.stopAnim.canRunAgain()){
                     this.stopAnim = undefined;
                     this.onEnd?.();
+
+                    const newPosition = Math.round(this.position);
+                    this.setPosition(newPosition);
                 }
             }
         }
