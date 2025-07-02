@@ -27,53 +27,74 @@ export class NewComponent extends Component {
 
     start() {
         this.buttonConnect.node.on('click', () => {
-            this.ws = new WebSocket('ws://localhost:2233');
+            try {
+                this.ws = new WebSocket('ws://localhost:2233');
 
-            this.ws.onopen = () => {
-                console.log('Connected');
-            };
-    
-            this.ws.onmessage = (event) => {
-                // 收到訊息
-                console.log('Received:', event.data);
-            };
+                this.ws.onopen = () => {
+                    console.log('Connected');
+                };
+        
+                this.ws.onmessage = (event) => {
+                    console.log('Received:', event.data);
+                };
 
-            this.ws.onerror = (error) => {
-                console.error('WebSocket error:', error);
-            };
+                this.ws.onerror = (error) => {
+                    console.error('WebSocket error:', error);
+                };
+            } catch (err) {
+                console.error('Failed to connect:', err);
+            }
         });
 
         const urlParams = this.getQueryParams();
-        console.log(urlParams); // { param1: "value1", param2: "value2" }
+        console.log(urlParams);
 
         this.buttonTestScheme.node.on('click', this.onButtonTestSchemeClick, this);
 
         this.buttonJoinRoom.node.on('click', () => {
-            const obj = {
-                commandType: 53,
-                content: {
-                    JoinAutoRoomReq: {
-                        betType: 0,
+            try {
+                const obj = {
+                    commandType: 53,
+                    content: {
+                        JoinAutoRoomReq: {
+                            betType: 0,
+                        }
                     }
-                }
-            };
+                };
+    
+                const jsonStr = JSON.stringify(obj);
 
-            const jsonStr = JSON.stringify(obj);
-            this.ws.send(jsonStr);
+                // ⛔ 故意讓錯誤發生（模擬未連線狀態）
+                if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
+                    throw new Error('WebSocket not connected');
+                }
+
+                this.ws.send(jsonStr);
+            } catch (err) {
+                console.error('Failed to send JoinRoom message:', err);
+            }
         });
     }
 
     onButtonTestSchemeClick() {
-        const obj = {
-            commandType: 13,
-            content: {
-                bet: 100,
+        try {
+            const obj = {
+                commandType: 13,
+                content: {
+                    bet: 100,
+                }
+            };
+            
+            const jsonStr = JSON.stringify(obj);
+
+            // ⛔ 故意讓錯誤發生（模擬未連線狀態）
+            if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
+                throw new Error('WebSocket not connected');
             }
-        };
-        
-        const jsonStr = JSON.stringify(obj);
-        this.ws.send(jsonStr);
+
+            this.ws.send(jsonStr);
+        } catch (err) {
+            console.error('Failed to send TestScheme message:', err);
+        }
     }
 }
-
-
