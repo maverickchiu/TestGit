@@ -104,6 +104,9 @@ runs:
         else:
             print(f"❌ Cannot find script at {script_path}"); sys.exit(1)
 
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@v2
+
     - name: Build Cocos Project
       shell: python
       env:

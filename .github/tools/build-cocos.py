@@ -20,32 +20,34 @@ def main():
         print(f"❌ Config not found: {config_path}")
         sys.exit(1)
 
-    # 執行 Cocos 命令
+    # 基礎參數
+    params = f"platform={platform};configPath={config_path}"
+
+    # 第一步：執行 Build (生成工程)
+    print("🛠 Step 1: Generating Project...")
     build_cmd = [
         cocos_path,
         "--project", project_path,
-        "--build", f"platform={platform};configPath={config_path};autoCompile={auto_compile}"
+        "--build", params
     ]
     
-    # 調整重點：
-    # 1. 明確將輸出導向到目前的 sys.stdout / sys.stderr
-    # 2. 確保緩衝被即時推送到 GitHub Action
-    print(f"Executing: {' '.join(build_cmd)}", flush=True)
-    
-    result = subprocess.run(
-        build_cmd, 
-        stdout=sys.stdout, # 強制導向到標準輸出
-        stderr=sys.stderr, # 強制導向到標準錯誤
-        check=False
-    )
-    
-    # 允許 Exit Code 0 或 36
-    if result.returncode in [0, 36]:
-        print("✅ Build Successful")
-        sys.exit(0)
-    else:
-        print(f"❌ Build Failed with code: {result.returncode}")
+    # 這裡執行第一次 subprocess.run
+    result = subprocess.run(build_cmd, stdout=sys.stdout, stderr=sys.stderr)
+    if result.returncode not in [0, 36]:
         sys.exit(result.returncode)
+
+    # 第二步：執行 Compile (編譯)
+    if auto_compile:
+        print("🚀 Step 2: Compiling / Making Package...")
+        # 注意：這裡使用 --make
+        make_cmd = [
+            cocos_path,
+            "--project", project_path,
+            "--make", params
+        ]
+        result_make = subprocess.run(make_cmd, stdout=sys.stdout, stderr=sys.stderr)
+        if result_make.returncode not in [0, 36]:
+            sys.exit(result_make.returncode)
 
 if __name__ == "__main__":
     main()
