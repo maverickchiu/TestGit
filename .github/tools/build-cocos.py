@@ -8,9 +8,9 @@ def main():
     platform = os.getenv("PLATFORM")
     dev_mode = os.getenv("DEV_MODE", "true").lower() == "true"
     
-    # 自動組合檔名: buildConfig_android-dev.json 或 buildConfig_android-release.json
+    # 自動組合檔名: android-dev.json 或 android-release.json
     mode = "dev" if dev_mode else "release"
-    config_name = f"buildConfig_{platform}-{mode}.json"
+    config_name = f"{platform}-{mode}.json"
     config_path = os.path.join(project_path, "build-configs", config_name)
 
     print(f"🚀 Building for {platform} ({mode})...")
