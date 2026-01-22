@@ -7,7 +7,7 @@ def main():
     project_path = os.getenv("GITHUB_WORKSPACE")
     platform = os.getenv("PLATFORM")
     dev_mode = os.getenv("DEV_MODE", "true").lower() == "true"
-    auto_compile = os.getenv("AUTO_COMPILE", false).lower() = "false"
+    auto_compile = os.getenv("AUTO_COMPILE", "false").lower() == "false"
     
     # 自動組合檔名: android-dev.json 或 android-release.json
     mode = "dev" if dev_mode else "release"
