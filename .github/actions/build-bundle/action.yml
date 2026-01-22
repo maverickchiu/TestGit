@@ -7,6 +7,8 @@ runs:
   steps:   
     - name: Setup Environment Variables
       shell: python
+      env:
+        PYTHONUTF8: "1"
       run: |
         import os, platform
         # 根據系統判斷路徑
@@ -31,6 +33,7 @@ runs:
     - name: Configure Engine Macro (CC_DEBUG)
       shell: python
       env:
+        PYTHONUTF8: "1"
         IS_DEBUG: ${{ inputs.is_debug }}
       run: |
         import subprocess, os, sys
@@ -45,6 +48,7 @@ runs:
     - name: Build Cocos Project
       shell: python
       env:
+        PYTHONUTF8: "1"
         PLATFORM: ${{ inputs.platform }}
         DEV_MODE: ${{ inputs.dev_mode }}
       run: |
