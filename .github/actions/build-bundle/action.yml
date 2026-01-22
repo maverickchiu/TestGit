@@ -55,7 +55,12 @@ inputs:
   git_token:
     description: 'Git Token'
     required: false
-    default: ''
+    default: ${{ github.token }} 
+
+  force_clean:
+    description: '是否強制清理'
+    required: false
+    default: 'true'
 
 runs:
   using: "composite" 
@@ -81,7 +86,7 @@ runs:
       uses: actions/checkout@v4
       with:
         submodules: false
-        token: ${{ inputs.git_token }}
+        token: ${{ inputs.git_token || github.token }}
         lfs: true
         clean: ${{ inputs.force_clean }}
     
