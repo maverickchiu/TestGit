@@ -1,0 +1,109 @@
+{
+  "name": "android-dev",
+  "server": "",
+  "engineModulesConfigKey": "defaultConfig",
+  "platform": "android",
+  "buildPath": "project://build",
+  "debug": true,
+  "buildMode": "normal",
+  "mangleProperties": false,
+  "md5Cache": true,
+  "skipCompressTexture": true,
+  "sourceMaps": "inline",
+  "overwriteProjectSettings": {
+    "macroConfig": {
+      "cleanupImageCache": "inherit-project-setting"
+    },
+    "includeModules": {
+      "physics": "inherit-project-setting",
+      "physics-2d": "inherit-project-setting",
+      "gfx-webgl2": "off"
+    }
+  },
+  "nativeCodeBundleMode": "wasm",
+  "polyfills": {
+    "asyncFunctions": false
+  },
+  "experimentalEraseModules": false,
+  "startSceneAssetBundle": false,
+  "bundleConfigs": [],
+  "inlineEnum": false,
+  "useBuiltinServer": false,
+  "md5CacheOptions": {
+    "excludes": [],
+    "includes": [],
+    "replaceOnly": [],
+    "handleTemplateMd5Link": true
+  },
+  "mainBundleIsRemote": false,
+  "mainBundleCompressionType": "merge_dep",
+  "useSplashScreen": false,
+  "bundleCommonChunk": false,
+  "packAutoAtlas": true,
+  "startScene": "05e9e37a-53ef-4ca4-9b9b-510390459838",
+  "outputName": "android-dev",
+  "taskName": "android-dev",
+  "scenes": [
+    {
+      "url": "db://assets/scene.scene",
+      "uuid": "05e9e37a-53ef-4ca4-9b9b-510390459838"
+    }
+  ],
+  "wasmCompressionMode": false,
+  "binGroupConfig": {
+    "threshold": 16,
+    "enable": false
+  },
+  "packages": {
+    "android": {
+      "packageName": "com.unone.android",
+      "resizeableActivity": true,
+      "maxAspectRatio": "2.4",
+      "orientation": {
+        "portrait": false,
+        "upsideDown": false,
+        "landscapeRight": true,
+        "landscapeLeft": true
+      },
+      "apiLevel": 26,
+      "appABIs": [
+        "arm64-v8a",
+        "armeabi-v7a"
+      ],
+      "useDebugKeystore": true,
+      "keystorePath": "",
+      "keystorePassword": "",
+      "keystoreAlias": "",
+      "keystoreAliasPassword": "",
+      "appBundle": false,
+      "androidInstant": false,
+      "inputSDK": false,
+      "remoteUrl": "",
+      "sdkPath": "",
+      "ndkPath": "",
+      "javaHome": "",
+      "javaPath": "",
+      "renderBackEnd": {
+        "vulkan": false,
+        "gles3": true,
+        "gles2": true
+      },
+      "swappy": true,
+      "__version__": "1.0.1"
+    },
+    "cocos-service": {
+      "configID": "59f406",
+      "services": [],
+      "__version__": "3.0.9"
+    },
+    "native": {
+      "encrypted": false,
+      "xxteaKey": "1es1Aje+lC8L1CzK",
+      "compressZip": false,
+      "JobSystem": "none",
+      "__version__": "1.0.2"
+    }
+  },
+  "__version__": "1.3.9",
+  "logDest": "project://temp/builder/log/android2026-1-22 11-15.log"
+}

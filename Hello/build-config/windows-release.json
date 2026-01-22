@@ -1,0 +1,82 @@
+{
+  "name": "Windows-Release",
+  "server": "",
+  "engineModulesConfigKey": "defaultConfig",
+  "platform": "windows",
+  "buildPath": "project://build",
+  "debug": false,
+  "buildMode": "normal",
+  "mangleProperties": false,
+  "md5Cache": true,
+  "skipCompressTexture": false,
+  "sourceMaps": true,
+  "overwriteProjectSettings": {
+    "macroConfig": {
+      "cleanupImageCache": "inherit-project-setting"
+    },
+    "includeModules": {
+      "physics": "inherit-project-setting",
+      "physics-2d": "inherit-project-setting",
+      "gfx-webgl2": "off"
+    }
+  },
+  "nativeCodeBundleMode": "wasm",
+  "polyfills": {
+    "asyncFunctions": false
+  },
+  "experimentalEraseModules": false,
+  "startSceneAssetBundle": false,
+  "bundleConfigs": [],
+  "inlineEnum": true,
+  "useBuiltinServer": false,
+  "md5CacheOptions": {
+    "excludes": [],
+    "includes": [],
+    "replaceOnly": [],
+    "handleTemplateMd5Link": true
+  },
+  "mainBundleIsRemote": false,
+  "mainBundleCompressionType": "merge_dep",
+  "useSplashScreen": false,
+  "bundleCommonChunk": false,
+  "packAutoAtlas": true,
+  "startScene": "05e9e37a-53ef-4ca4-9b9b-510390459838",
+  "outputName": "windows-release",
+  "taskName": "windows-release",
+  "scenes": [
+    {
+      "url": "db://assets/scene.scene",
+      "uuid": "05e9e37a-53ef-4ca4-9b9b-510390459838"
+    }
+  ],
+  "wasmCompressionMode": false,
+  "binGroupConfig": {
+    "threshold": 16,
+    "enable": false
+  },
+  "packages": {
+    "windows": {
+      "executableName": "",
+      "renderBackEnd": {
+        "vulkan": false,
+        "gles3": true,
+        "gles2": true
+      },
+      "targetPlatform": "x64",
+      "__version__": "1.0.1"
+    },
+    "cocos-service": {
+      "configID": "59f406",
+      "services": [],
+      "__version__": "3.0.9"
+    },
+    "native": {
+      "encrypted": true,
+      "xxteaKey": "j+i3-942/84au_%a",
+      "compressZip": true,
+      "JobSystem": "none",
+      "__version__": "1.0.2"
+    }
+  },
+  "__version__": "1.3.9"
+}

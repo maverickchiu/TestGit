@@ -1,0 +1,24 @@
+{
+  "ver": "1.2.0",
+  "importer": "directory",
+  "imported": true,
+  "uuid": "a28df0f0-5bfb-4372-8e70-206547563106",
+  "files": [],
+  "subMetas": {},
+  "userData": {
+    "isBundle": true,
+    "bundleFilterConfig": [
+      {
+        "range": "include",
+        "type": "url",
+        "patchOption": {
+          "patchType": "glob",
+          "value": "db://assets/girls/**/*"
+        },
+        "assets": [
+          ""
+        ]
+      }
+    ]
+  }
+}
