@@ -1,6 +1,61 @@
 name: Build Bundle
 description: '打包資源流程'
-# ... inputs 保持不變 ...
+
+inputs:
+  editor_path:
+    description: 'Editor位置'
+    required: true
+    default: 'macOS'
+    type: choice
+    options: 
+      - windows
+      - macOS
+
+  platform:
+    description: '平台'
+    required: true
+    default: 'windows'
+    type: choice
+    options:
+      - windows
+      - android
+      - ios
+
+  environment:
+    description: '環境'
+    required: true
+    default: 'development'
+    type: choice
+    options:
+      - development
+      - test
+      - production
+
+  dev_mode:
+    description: '開發者模式'
+    required: true
+    default: true
+    type: boolean
+
+  version_name:
+    description: '版本名稱'
+    required: true
+    default: '1.2.12'
+    type: choice
+    options:
+      - 1.2.12
+      - 1.66.1
+      - 1.66.2
+      - 1.66.3
+      - 1.66.4
+      - 1.66.5
+      - 1.66.6
+      - 1.66.7
+
+  git_token:
+    description: 'Git Token'
+    required: false
+    default: ''
 
 runs:
   using: "composite" 
