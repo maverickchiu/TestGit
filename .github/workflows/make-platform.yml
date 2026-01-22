@@ -52,7 +52,7 @@ jobs:
       - name: Update Assets
         uses: ./.github/actions/build-bundle
         with:
-          git_token: ''
+          git_token: ${{ github.token }} 
           force_clean: false
           environment: ${{ inputs.environment }}
           is_debug: true
