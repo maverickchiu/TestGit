@@ -5,17 +5,21 @@ runs:
   using: "composite" 
   steps:  
     - name: Run Setup Dependencies Script
-      # 在 GitHub Runner 中，不論 Win 或 Mac，直接寫 python 即可
-      # 我們使用 -u (unbuffered) 確保 log 能即時印出
       shell: python
       run: |
         import subprocess
         import os
+        import sys
+        
+        # 強制設定環境變數，讓子程序也使用 UTF-8
+        env = os.environ.copy()
+        env["PYTHONUTF8"] = "1"
         
         script_path = os.path.join(os.environ['GITHUB_WORKSPACE'], '.github', 'tools', 'setup-deps.py')
         
         if os.path.exists(script_path):
-            subprocess.run(['python', '-u', script_path], check=True)
+            # 傳入 env=env
+            subprocess.run(['python', '-u', script_path], check=True, env=env)
         else:
             print(f"❌ Cannot find script at {script_path}")
-            exit(1)
+            sys.exit(1)
