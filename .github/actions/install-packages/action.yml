@@ -1,6 +1,5 @@
 name: Install Packages
 description: '安裝專案依賴'
-inputs:
 
 runs:
   using: "composite" 
