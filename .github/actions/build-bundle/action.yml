@@ -113,9 +113,20 @@ runs:
       run: |
         import subprocess, os, sys
         script_path = os.path.join(os.environ['GITHUB_WORKSPACE'], '.github', 'tools', 'build-cocos.py')
+        
+        # 確保環境變數正確傳遞
         custom_env = os.environ.copy()
         custom_env["PYTHONUTF8"] = "1"
+        
         if os.path.exists(script_path):
-            subprocess.run(['python', '-X', 'utf8', '-u', script_path], check=True, env=custom_env)
+            # 重點：移除 stdout/stderr 的攔截，直接讓它輸出到 parent process
+            # 並加上 -u (unbuffered) 參數確保即時性
+            result = subprocess.run(
+                ['python', '-u', script_path], 
+                check=True, 
+                env=custom_env,
+                # 這裡不設定 stdout=PIPE，就會直接印在 GitHub Actions Log
+            )
         else:
-            print(f"❌ Script not found: {script_path}"); sys.exit(1)
+            print(f"❌ Script not found: {script_path}")
+            sys.exit(1)
