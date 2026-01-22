@@ -108,6 +108,7 @@ runs:
       shell: python
       env:
         PYTHONUTF8: "1"
+        PYTHONUNBUFFERED: "1" # 加入這一行，確保所有 print 立即顯示
         PLATFORM: ${{ inputs.platform }}
         DEV_MODE: ${{ inputs.dev_mode }}
       run: |

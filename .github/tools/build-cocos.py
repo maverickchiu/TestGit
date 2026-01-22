@@ -26,7 +26,17 @@ def main():
         "--build", f"platform={platform};configPath={config_path}"
     ]
     
-    result = subprocess.run(build_cmd, check=False)
+    # 調整重點：
+    # 1. 明確將輸出導向到目前的 sys.stdout / sys.stderr
+    # 2. 確保緩衝被即時推送到 GitHub Action
+    print(f"Executing: {' '.join(build_cmd)}", flush=True)
+    
+    result = subprocess.run(
+        build_cmd, 
+        stdout=sys.stdout, # 強制導向到標準輸出
+        stderr=sys.stderr, # 強制導向到標準錯誤
+        check=False
+    )
     
     # 允許 Exit Code 0 或 36
     if result.returncode in [0, 36]:
