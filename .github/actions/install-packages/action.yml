@@ -11,15 +11,17 @@ runs:
         import os
         import sys
         
-        # 強制設定環境變數，讓子程序也使用 UTF-8
-        env = os.environ.copy()
-        env["PYTHONUTF8"] = "1"
-        
+        # 1. 取得腳本路徑
         script_path = os.path.join(os.environ['GITHUB_WORKSPACE'], '.github', 'tools', 'setup-deps.py')
         
+        # 2. 準備環境變數 (確保子程序也用 UTF-8)
+        custom_env = os.environ.copy()
+        custom_env["PYTHONUTF8"] = "1"
+        
         if os.path.exists(script_path):
-            # 傳入 env=env
-            subprocess.run(['python', '-u', script_path], check=True, env=env)
+            # 使用 -X utf8 強制開啟 UTF-8 模式
+            # 使用 -u 確保 log 即時印出
+            subprocess.run(['python', '-X', 'utf8', '-u', script_path], check=True, env=custom_env)
         else:
-            print(f"❌ Cannot find script at {script_path}")
+            print(f"Cannot find script at {script_path}")
             sys.exit(1)
