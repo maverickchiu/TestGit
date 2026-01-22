@@ -1,6 +1,49 @@
 name: Build Bundle
 description: '打包資源流程'
 inputs:
+  editor_path:
+  description: 'Editor位置'
+  default: 'macOS'
+  type: choice
+  options: 
+    - windows
+    - macOS
+
+  platform:
+    description: '平台'
+    required: true
+    default: 'windows'
+    type: choice
+    options:
+      - windows
+      - android
+      - ios
+  environment:
+    description: '環境'
+    required: true
+    default: 'development'
+    type: choice
+    options:
+      - development
+      - test
+      - production
+  version_name:
+    description: '版本名稱'
+    required: true
+    default: '1.2.12'
+    type: choice
+    options:
+      - 1.2.12
+      - 1.66.1
+      - 1.66.2
+      - 1.66.3
+      - 1.66.4
+      - 1.66.5
+      - 1.66.6
+      - 1.66.7
+env:
+  COCOS_PATH_WIN: "D:\\Program Files\\Cocos\\Editors\\Creator\\3.8.8\\CocosCreator.exe"
+  COCOS_PATH_MAC: "/Applications/Cocos/CocosCreator.app/Contents/MacOS/CocosCreator"
 
 runs:
   using: "composite" 
@@ -9,7 +52,11 @@ runs:
       shell: bash
       run: |
         echo "Setting up COCOS_PATH..."
-        echo "COCOS_PATH=/Applications/Cocos/Creator/3.8.8/CocosCreator.app/Contents/MacOS/CocosCreator" >> $GITHUB_ENV
+        if [ "${{ matrix.os }}" == "windows-latest" ]; then
+          echo "COCOS_PATH=${{ env.COCOS_PATH_WIN }}" >> $GITHUB_ENV
+        else
+          echo "COCOS_PATH=${{ env.COCOS_PATH_MAC }}" >> $GITHUB_ENV
+        fi
 
     - name: Checkout Source
       uses: actions/checkout@v4
@@ -19,70 +66,28 @@ runs:
         lfs: true
         clean: ${{ inputs.force_clean }}
     
-    - name: Install Project Dependencies
-      shell: bash
-      run: |
-        if [ -f "package.json" ]; then
-          echo "📦 Found package.json in root, installing dependencies..."
-          npm install
-        else
-          echo "⚠️ No package.json in root, skipping."
-        fi
-        
-    - name: Install All Extensions Dependencies
-      shell: bash
-      run: |
-        echo "🔍 Checking extensions directory..."
-        if [ -d "extensions" ]; then
-          for dir in extensions/*/; do
-            dir=${dir%*/}
-            if [ -d "$dir" ] && [ -f "$dir/package.json" ]; then
-              echo "📦 Installing dependencies for $dir..."
-              (cd "$dir" && npm install)
-            else
-              echo "⏭️ Skipping $dir (No package.json found)"
-            fi
-          done
-        else
-          echo "⚠️ No 'extensions' directory found. Skipping."
-        fi
-
-    # 修改 engine.json 設定 CC_DEBUG
     - name: Configure Engine Macro (CC_DEBUG)
-      shell: bash
+      shell: python
       env:
         IS_DEBUG: ${{ inputs.is_debug }}
       run: |
-        node -e '
-          const fs = require("fs");
-          const filePath = "./settings/v2/packages/engine.json";
-          
-          try {
-            if (!fs.existsSync(filePath)) {
-              console.log("⚠️ File not found:", filePath, "- Skipping Macro setup (Maybe first build?)");
-              process.exit(0);
-            }
-
-            const data = JSON.parse(fs.readFileSync(filePath, "utf8"));
-            if (!data.macroCustom) data.macroCustom = [];
-
-            const debugVal = (process.env.IS_DEBUG === "true");
-            const target = data.macroCustom.find(item => item.key === "CC_DEBUG");
-
-            if (target) {
-              target.value = debugVal;
-              console.log(`✅ Updated CC_DEBUG to: ${debugVal}`);
-            } else {
-              data.macroCustom.push({ key: "CC_DEBUG", value: debugVal });
-              console.log(`✅ Added new CC_DEBUG: ${debugVal}`);
-            }
-
-            fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
-          } catch (error) {
-            console.error("❌ Failed to update engine.json:", error);
-            process.exit(1);
-          }
-        '
+        import subprocess
+        import os
+        import sys
+        
+        # 1. 取得腳本路徑
+        script_path = os.path.join(os.environ['GITHUB_WORKSPACE'], '.github', 'tools', 'configure-engine.py')
+        
+        # 2. 設定環境變數傳遞給子程序
+        custom_env = os.environ.copy()
+        custom_env["PYTHONUTF8"] = "1"
+        
+        if os.path.exists(script_path):
+            # 強制開啟 UTF-8 模式執行
+            subprocess.run(['python', '-X', 'utf8', '-u', script_path], check=True, env=custom_env)
+        else:
+            print(f"❌ Cannot find script at {script_path}")
+            sys.exit(1)
 
     # 建置 Cocos
     - name: Build Cocos Project
