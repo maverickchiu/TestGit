@@ -2,23 +2,23 @@
 #///////////////////////////
 # Cocos Creator 3D Project
 #///////////////////////////
-Hello/library/
-Hello/temp/
-Hello/local/
-Hello/build/
-Hello/profiles/
+library/
+temp/
+local/
+build/
+profiles/
 native
 #//////////////////////////
 # NPM
 #//////////////////////////
-Hello/node_modules/
+node_modules/
 
 #//////////////////////////
 # VSCode
 #//////////////////////////
-Hello/.vscode/
+.vscode/
 
 #//////////////////////////
 # WebStorm
 #//////////////////////////
-Hello/.idea/
+.idea/

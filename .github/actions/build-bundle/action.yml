@@ -5,17 +5,6 @@ inputs:
 runs:
   using: "composite" 
   steps:  
-    - name: 🖨️ Print Build Inputs
-      shell: bash
-      run: |
-        echo "=========================================="
-        echo "   🚀 Build Starter Parameters"
-        echo "=========================================="
-        echo "Environment  : ${{ inputs.environment }}"
-        echo "Is Debug Mode: ${{ inputs.is_debug }}"
-        echo "Re-Build     : ${{ inputs.re_build }}"
-        echo "Force Clean  : ${{ inputs.force_clean }}"
-
     - name: Setup Environment Variables
       shell: bash
       run: |
