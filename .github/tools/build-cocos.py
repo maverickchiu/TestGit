@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os, subprocess, sys
+import time
 
 def get_startup_info():
     """在 Windows 環境下隱藏彈出的 GUI 視窗"""
@@ -56,13 +57,14 @@ def main():
 
     # --- Step 2: Make (編譯專案) ---
     if auto_compile:
+        print("⏳ Waiting for file system to sync...")
+        time.sleep(5) # 給系統 5 秒鐘釋放檔案鎖定
+
         print("🚀 Step 2: Compiling / Making Package...")
         make_cmd = [
             cocos_path,
             "--project", project_path,
-            "--batch",          # 同樣使用 batch 模式
             "--make", params,
-            "--force"
         ]
         
         result_make = subprocess.run(
