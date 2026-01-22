@@ -81,6 +81,13 @@ runs:
             f.write(f"COCOS_PATH={cocos_path}\n")
         print(f"✅ Set COCOS_PATH to: {cocos_path}")
 
+    # - name: Checkout Source
+    #   uses: actions/checkout@v4
+    #   with:
+    #     submodules: false
+    #     token: ${{ inputs.git_token || github.token }}
+    #     lfs: true
+    #     clean: ${{ inputs.force_clean }}
     
     - name: Configure Engine Macro (CC_DEBUG)
       shell: python

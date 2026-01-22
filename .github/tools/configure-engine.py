@@ -39,7 +39,7 @@ def update_engine_macro():
 
         # 寫回檔案
         with open(file_path, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=2, ensure_確保ascii=False)
+            json.dump(data, f, indent=2, ensure_ascii=False)
 
     except Exception as e:
         print(f"❌ Failed to update engine.json: {e}")
