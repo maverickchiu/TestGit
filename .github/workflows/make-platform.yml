@@ -24,9 +24,10 @@ on:
       version_name:
         description: '版本名稱'
         required: true
-        default: '1.66.1'
+        default: '1.2.12'
         type: choice
         options:
+          - 1.2.12
           - 1.66.1
           - 1.66.2
           - 1.66.3
@@ -44,6 +45,9 @@ jobs:
         with:
           submodules: recursive
           lfs: true
+
+      - name: Update Assets
+        uses: ./.github/workflows/update-assets.yml
 
       - name: Run a one-line script
         run: echo ${{ inputs.platform }} ${{ inputs.environment }} ${{ inputs.version_name }}

@@ -1,0 +1,10 @@
+name: Update Assets
+on:
+  workflow_call: # 代表這是一個可以被別人呼叫的流程
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Update Script
+        run: echo "Updating assets..."
