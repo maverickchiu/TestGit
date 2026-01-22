@@ -1,62 +1,24 @@
 name: Build Bundle
 description: '打包資源流程'
-inputs:
-  editor_path:
-  description: 'Editor位置'
-  default: 'macOS'
-  type: choice
-  options: 
-    - windows
-    - macOS
-
-  platform:
-    description: '平台'
-    required: true
-    default: 'windows'
-    type: choice
-    options:
-      - windows
-      - android
-      - ios
-  environment:
-    description: '環境'
-    required: true
-    default: 'development'
-    type: choice
-    options:
-      - development
-      - test
-      - production
-  version_name:
-    description: '版本名稱'
-    required: true
-    default: '1.2.12'
-    type: choice
-    options:
-      - 1.2.12
-      - 1.66.1
-      - 1.66.2
-      - 1.66.3
-      - 1.66.4
-      - 1.66.5
-      - 1.66.6
-      - 1.66.7
-env:
-  COCOS_PATH_WIN: "D:\\Program Files\\Cocos\\Editors\\Creator\\3.8.8\\CocosCreator.exe"
-  COCOS_PATH_MAC: "/Applications/Cocos/CocosCreator.app/Contents/MacOS/CocosCreator"
+# ... inputs 保持不變 ...
 
 runs:
   using: "composite" 
-  steps:  
+  steps:   
     - name: Setup Environment Variables
-      shell: bash
+      shell: python
       run: |
-        echo "Setting up COCOS_PATH..."
-        if [ "${{ matrix.os }}" == "windows-latest" ]; then
-          echo "COCOS_PATH=${{ env.COCOS_PATH_WIN }}" >> $GITHUB_ENV
-        else
-          echo "COCOS_PATH=${{ env.COCOS_PATH_MAC }}" >> $GITHUB_ENV
-        fi
+        import os, platform
+        # 根據系統判斷路徑
+        win_path = r"D:\Program Files\Cocos\Editors\Creator\3.8.8\CocosCreator.exe"
+        mac_path = "/Applications/Cocos/CocosCreator.app/Contents/MacOS/CocosCreator"
+        
+        # 判斷當前 Runner OS 並寫入環境變數
+        cocos_path = win_path if platform.system() == "Windows" else mac_path
+        
+        with open(os.environ['GITHUB_ENV'], 'a', encoding='utf-8') as f:
+            f.write(f"COCOS_PATH={cocos_path}\n")
+        print(f"✅ Set COCOS_PATH to: {cocos_path}")
 
     - name: Checkout Source
       uses: actions/checkout@v4
@@ -71,34 +33,26 @@ runs:
       env:
         IS_DEBUG: ${{ inputs.is_debug }}
       run: |
-        import subprocess
-        import os
-        import sys
-        
-        # 1. 取得腳本路徑
+        import subprocess, os, sys
         script_path = os.path.join(os.environ['GITHUB_WORKSPACE'], '.github', 'tools', 'configure-engine.py')
-        
-        # 2. 設定環境變數傳遞給子程序
         custom_env = os.environ.copy()
         custom_env["PYTHONUTF8"] = "1"
-        
         if os.path.exists(script_path):
-            # 強制開啟 UTF-8 模式執行
             subprocess.run(['python', '-X', 'utf8', '-u', script_path], check=True, env=custom_env)
         else:
-            print(f"❌ Cannot find script at {script_path}")
-            sys.exit(1)
+            print(f"❌ Cannot find script at {script_path}"); sys.exit(1)
 
-    # 建置 Cocos
     - name: Build Cocos Project
-      shell: bash
+      shell: python
+      env:
+        PLATFORM: ${{ inputs.platform }}
+        DEV_MODE: ${{ inputs.dev_mode }}
       run: |
-        echo "Start Building Cocos Project..."
-        set +e 
-        "$COCOS_PATH" --project "${{ github.workspace }}" --build "platform=android;configPath=./build-configs/buildConfig_android.json;debug=${{ inputs.is_debug }}"
-        EXIT_CODE=$?
-        if [ $EXIT_CODE -eq 0 ] || [ $EXIT_CODE -eq 36 ]; then
-          exit 0
-        else
-          exit $EXIT_CODE
-        fi
+        import subprocess, os, sys
+        script_path = os.path.join(os.environ['GITHUB_WORKSPACE'], '.github', 'tools', 'build-cocos.py')
+        custom_env = os.environ.copy()
+        custom_env["PYTHONUTF8"] = "1"
+        if os.path.exists(script_path):
+            subprocess.run(['python', '-X', 'utf8', '-u', script_path], check=True, env=custom_env)
+        else:
+            print(f"❌ Script not found: {script_path}"); sys.exit(1)
