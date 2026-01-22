@@ -59,9 +59,10 @@ def main():
         print("🚀 Step 2: Compiling / Making Package...")
         make_cmd = [
             cocos_path,
-            "--batch",          # 同樣使用 batch 模式
             "--project", project_path,
-            "--make", params
+            "--batch",          # 同樣使用 batch 模式
+            "--make", params,
+            "--force"
         ]
         
         result_make = subprocess.run(
