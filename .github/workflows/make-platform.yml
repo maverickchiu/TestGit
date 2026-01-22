@@ -51,6 +51,12 @@ jobs:
 
       - name: Update Assets
         uses: ./.github/actions/build-bundle
+        with:
+          git_token: ''
+          force_clean: false
+          environment: ${{ inputs.environment }}
+          is_debug: true
+
 
       - name: Run a one-line script
         run: echo ${{ inputs.platform }} ${{ inputs.environment }} ${{ inputs.version_name }}
