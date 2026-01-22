@@ -46,8 +46,11 @@ jobs:
           submodules: recursive
           lfs: true
 
+      - name: Install Packages
+        uses: ./.github/actions/install-packages
+
       - name: Update Assets
-        uses: ./.github/workflows/update-assets.yml
+        uses: ./.github/actions/build-bundle
 
       - name: Run a one-line script
         run: echo ${{ inputs.platform }} ${{ inputs.environment }} ${{ inputs.version_name }}

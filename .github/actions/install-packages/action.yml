@@ -1,0 +1,34 @@
+name: Install Packages
+description: '安裝專案依賴'
+inputs:
+
+runs:
+  using: "composite" 
+  steps:  
+    - name: Install Project Dependencies
+      shell: bash
+      run: |
+        if [ -f "package.json" ]; then
+          echo "📦 Found package.json in root, installing dependencies..."
+          npm install
+        else
+          echo "⚠️ No package.json in root, skipping."
+        fi
+        
+    - name: Install All Extensions Dependencies
+      shell: bash
+      run: |
+        echo "🔍 Checking extensions directory..."
+        if [ -d "extensions" ]; then
+          for dir in extensions/*/; do
+            dir=${dir%*/}
+            if [ -d "$dir" ] && [ -f "$dir/package.json" ]; then
+              echo "📦 Installing dependencies for $dir..."
+              (cd "$dir" && npm install)
+            else
+              echo "⏭️ Skipping $dir (No package.json found)"
+            fi
+          done
+        else
+          echo "⚠️ No 'extensions' directory found. Skipping."
+        fi

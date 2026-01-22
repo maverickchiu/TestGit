@@ -1,0 +1,110 @@
+name: Build Bundle
+description: '打包資源流程'
+inputs:
+
+runs:
+  using: "composite" 
+  steps:  
+    - name: 🖨️ Print Build Inputs
+      shell: bash
+      run: |
+        echo "=========================================="
+        echo "   🚀 Build Starter Parameters"
+        echo "=========================================="
+        echo "Environment  : ${{ inputs.environment }}"
+        echo "Is Debug Mode: ${{ inputs.is_debug }}"
+        echo "Re-Build     : ${{ inputs.re_build }}"
+        echo "Force Clean  : ${{ inputs.force_clean }}"
+
+    - name: Setup Environment Variables
+      shell: bash
+      run: |
+        echo "Setting up COCOS_PATH..."
+        echo "COCOS_PATH=/Applications/Cocos/Creator/3.8.8/CocosCreator.app/Contents/MacOS/CocosCreator" >> $GITHUB_ENV
+
+    - name: Checkout Source
+      uses: actions/checkout@v4
+      with:
+        submodules: false
+        token: ${{ inputs.git_token }}
+        lfs: true
+        clean: ${{ inputs.force_clean }}
+    
+    - name: Install Project Dependencies
+      shell: bash
+      run: |
+        if [ -f "package.json" ]; then
+          echo "📦 Found package.json in root, installing dependencies..."
+          npm install
+        else
+          echo "⚠️ No package.json in root, skipping."
+        fi
+        
+    - name: Install All Extensions Dependencies
+      shell: bash
+      run: |
+        echo "🔍 Checking extensions directory..."
+        if [ -d "extensions" ]; then
+          for dir in extensions/*/; do
+            dir=${dir%*/}
+            if [ -d "$dir" ] && [ -f "$dir/package.json" ]; then
+              echo "📦 Installing dependencies for $dir..."
+              (cd "$dir" && npm install)
+            else
+              echo "⏭️ Skipping $dir (No package.json found)"
+            fi
+          done
+        else
+          echo "⚠️ No 'extensions' directory found. Skipping."
+        fi
+
+    # 修改 engine.json 設定 CC_DEBUG
+    - name: Configure Engine Macro (CC_DEBUG)
+      shell: bash
+      env:
+        IS_DEBUG: ${{ inputs.is_debug }}
+      run: |
+        node -e '
+          const fs = require("fs");
+          const filePath = "./settings/v2/packages/engine.json";
+          
+          try {
+            if (!fs.existsSync(filePath)) {
+              console.log("⚠️ File not found:", filePath, "- Skipping Macro setup (Maybe first build?)");
+              process.exit(0);
+            }
+
+            const data = JSON.parse(fs.readFileSync(filePath, "utf8"));
+            if (!data.macroCustom) data.macroCustom = [];
+
+            const debugVal = (process.env.IS_DEBUG === "true");
+            const target = data.macroCustom.find(item => item.key === "CC_DEBUG");
+
+            if (target) {
+              target.value = debugVal;
+              console.log(`✅ Updated CC_DEBUG to: ${debugVal}`);
+            } else {
+              data.macroCustom.push({ key: "CC_DEBUG", value: debugVal });
+              console.log(`✅ Added new CC_DEBUG: ${debugVal}`);
+            }
+
+            fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+          } catch (error) {
+            console.error("❌ Failed to update engine.json:", error);
+            process.exit(1);
+          }
+        '
+
+    # 建置 Cocos
+    - name: Build Cocos Project
+      shell: bash
+      run: |
+        echo "Start Building Cocos Project..."
+        set +e 
+        "$COCOS_PATH" --project "${{ github.workspace }}" --build "platform=android;configPath=./build-configs/buildConfig_android.json;debug=${{ inputs.is_debug }}"
+        EXIT_CODE=$?
+        if [ $EXIT_CODE -eq 0 ] || [ $EXIT_CODE -eq 36 ]; then
+          exit 0
+        else
+          exit $EXIT_CODE
+        fi
