@@ -22,3 +22,7 @@ node_modules/
 # WebStorm
 #//////////////////////////
 .idea/
+
+settings/v2/packages/engine.json
+package-lock.json
+package.json
