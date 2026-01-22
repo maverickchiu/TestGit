@@ -65,6 +65,7 @@ def main():
             cocos_path,
             "--project", project_path,
             "--make", params,
+            "--force"
         ]
         
         result_make = subprocess.run(
