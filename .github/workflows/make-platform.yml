@@ -45,6 +45,7 @@ jobs:
         with:
           submodules: recursive
           lfs: true
+          clean: false
 
       - name: Install Packages
         uses: ./.github/actions/install-packages
