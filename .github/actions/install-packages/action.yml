@@ -1,33 +1,21 @@
 name: Install Packages
-description: '安裝專案依賴'
+description: '使用 Python 安裝專案與擴充套件依賴'
 
 runs:
   using: "composite" 
   steps:  
-    - name: Install Project Dependencies
-      shell: bash
+    - name: Run Setup Dependencies Script
+      # 在 GitHub Runner 中，不論 Win 或 Mac，直接寫 python 即可
+      # 我們使用 -u (unbuffered) 確保 log 能即時印出
+      shell: python
       run: |
-        if [ -f "package.json" ]; then
-          echo "📦 Found package.json in root, installing dependencies..."
-          npm install
-        else
-          echo "⚠️ No package.json in root, skipping."
-        fi
+        import subprocess
+        import os
         
-    - name: Install All Extensions Dependencies
-      shell: C:\Progra~1\Git\bin\bash.exe --noprofile --norc -e -o pipefail {0}
-      run: |
-        echo "🔍 Checking extensions directory..."
-        if [ -d "extensions" ]; then
-          for dir in extensions/*/; do
-            dir=${dir%*/}
-            if [ -d "$dir" ] && [ -f "$dir/package.json" ]; then
-              echo "📦 Installing dependencies for $dir..."
-              (cd "$dir" && npm install)
-            else
-              echo "⏭️ Skipping $dir (No package.json found)"
-            fi
-          done
-        else
-          echo "⚠️ No 'extensions' directory found. Skipping."
-        fi
+        script_path = os.path.join(os.environ['GITHUB_WORKSPACE'], '.github', 'tools', 'setup-deps.py')
+        
+        if os.path.exists(script_path):
+            subprocess.run(['python', '-u', script_path], check=True)
+        else:
+            print(f"❌ Cannot find script at {script_path}")
+            exit(1)
