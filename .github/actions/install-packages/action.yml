@@ -15,7 +15,7 @@ runs:
         fi
         
     - name: Install All Extensions Dependencies
-      shell: bash
+      shell: C:\Progra~1\Git\bin\bash.exe --noprofile --norc -e -o pipefail {0}
       run: |
         echo "🔍 Checking extensions directory..."
         if [ -d "extensions" ]; then
