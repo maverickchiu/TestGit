@@ -24,3 +24,4 @@ node_modules/
 .idea/
 
 settings/v2/packages/engine.json
+package-lock.json
