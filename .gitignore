@@ -25,3 +25,4 @@ node_modules/
 
 settings/v2/packages/engine.json
 package-lock.json
+package.json
