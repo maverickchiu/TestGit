@@ -11,12 +11,12 @@ def get_startup_info():
         return info
     return None
 
-def run_cocos_stage(cocos_path, project_path, stage, config_path, startup_info, name):
+def run_cocos_stage(cocos_path, project_path, stage, config_path, startup_info):
     """執行 Cocos 指定階段的構建任務"""
     print(f"🎬 Running Cocos Stage: {stage}...", flush=True)
     
     # 核心修正：將 stage 放入 params，並加上 verbosity 讓 Log 稍微清楚一點
-    params = f"configPath={config_path};stage={stage};force=true;verbosity=minimal;name={name}"
+    params = f"configPath={config_path};stage={stage};force=true;verbosity=minimal"
     
     cmd = [
         cocos_path,
