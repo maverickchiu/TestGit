@@ -42,17 +42,17 @@ jobs:
     runs-on: [self-hosted]
 
     steps:
-      - name: Summary Inputs
-        uses: ./.github/actions/summary-inputs
-        with:
-          all_inputs: ${{ toJSON(inputs) }}
-
       - name: check out
         uses: actions/checkout@v4
         with:
           submodules: recursive
           lfs: true
           clean: false
+
+      - name: Summary Inputs
+        uses: ./.github/actions/summary-inputs
+        with:
+          all_inputs: ${{ toJSON(inputs) }}
 
       - name: Install Packages
         uses: ./.github/actions/install-packages
