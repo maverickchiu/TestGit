@@ -50,8 +50,8 @@ jobs:
       - name: Install Packages
         uses: ./.github/actions/install-packages
 
-      - name: Update Assets
-        uses: ./.github/actions/build-bundle
+      - name: Build Bundle & Compile
+        uses: ./.github/actions/build-core
         with:
           git_token: ${{ github.token }} 
           force_clean: false
@@ -59,6 +59,7 @@ jobs:
           platform: ${{ inputs.platform }}
           is_debug: true
           dev_mode: true
+          auto_compile: true
 
 
       - name: Run a one-line script

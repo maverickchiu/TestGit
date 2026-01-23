@@ -1,5 +1,5 @@
 name: Build Bundle
-description: '打包資源流程'
+description: '打包資源&建置流程'
 
 inputs:
   editor_path:
@@ -61,6 +61,11 @@ inputs:
     required: false
     default: 'true'
 
+  auto_compile:
+    description: '是否產生執行檔'
+    required: false
+    default: false
+
 runs:
   using: "composite" 
   steps:   
@@ -114,7 +119,7 @@ runs:
         PYTHONUNBUFFERED: "1" # 加入這一行，確保所有 print 立即顯示
         PLATFORM: ${{ inputs.platform }}
         DEV_MODE: ${{ inputs.dev_mode }}
-        AUTO_COMPILE: true
+        AUTO_COMPILE: ${{ inputs.auto_compile }}
       run: |
         import subprocess, os, sys
         script_path = os.path.join(os.environ['GITHUB_WORKSPACE'], '.github', 'tools', 'build-cocos.py')
