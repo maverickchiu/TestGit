@@ -3,6 +3,16 @@ name: 內部資源更新
 on:
   workflow_dispatch:
     inputs:
+      environment:
+        description: '環境'
+        required: true
+        default: 'development'
+        type: choice
+        options:
+          - development
+          - test
+          - production
+
       build_windows:
         description: '打包Windows環境'
         required: true
@@ -20,16 +30,6 @@ on:
         required: true
         default: true
         type: boolean
-
-      environment:
-        description: '環境'
-        required: true
-        default: 'development'
-        type: choice
-        options:
-          - development
-          - test
-          - production
 
 jobs:
   build:
