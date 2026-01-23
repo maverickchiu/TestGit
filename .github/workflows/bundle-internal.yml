@@ -32,7 +32,15 @@ on:
         type: boolean
 
 jobs:
-  build:
+  summary_inputs:
+    steps:
+      - name: Summary Inputs
+        uses: ./.github/actions/summary-inputs
+        with:
+          all_inputs: ${{ toJSON(inputs) }} 
+
+  build_windows:
+    if: ${{ inputs.build_windows }}
     runs-on: [self-hosted]
 
     steps:
@@ -43,17 +51,11 @@ jobs:
           lfs: true
           clean: false
 
-      - name: Summary Inputs
-        uses: ./.github/actions/summary-inputs
-        with:
-          all_inputs: ${{ toJSON(inputs) }} 
-
       - name: Install Packages
         uses: ./.github/actions/install-packages
 
       - name: Build Bundle(Windows)
-        if: ${{ inputs.build_windows }}
-        uses: ./.github/actions/build-core
+        uses: ./.github/actions/update-bundles
         with:
           git_token: ${{ github.token }} 
           force_clean: false
@@ -62,24 +64,52 @@ jobs:
           dev_mode: true
           auto_compile: false
 
-      - name: Build Bundle(Android)
-        if: ${{ inputs.build_android }}
-        uses: ./.github/actions/build-core
+  build_ios:
+    if: ${{ inputs.build_ios }}
+    runs-on: [self-hosted]
+
+    steps:
+      - name: check out
+        uses: actions/checkout@v4
         with:
-          git_token: ${{ github.token }} 
-          force_clean: false
-          environment: ${{ inputs.environment }}
-          platform: android
-          dev_mode: true
-          auto_compile: false
+          submodules: recursive
+          lfs: true
+          clean: false
+
+      - name: Install Packages
+        uses: ./.github/actions/install-packages
 
       - name: Build Bundle(iOS)
-        if: ${{ inputs.build_ios }}
-        uses: ./.github/actions/build-core
+        uses: ./.github/actions/update-bundles
         with:
           git_token: ${{ github.token }} 
           force_clean: false
           environment: ${{ inputs.environment }}
           platform: ios
+          dev_mode: true
+          auto_compile: false
+
+  build_android:
+    if: ${{ inputs.build_android }}
+    runs-on: [self-hosted]
+
+    steps:
+      - name: check out
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          lfs: true
+          clean: false
+
+      - name: Install Packages
+        uses: ./.github/actions/install-packages
+
+      - name: Build Bundle(Android)
+        uses: ./.github/actions/update-bundles
+        with:
+          git_token: ${{ github.token }} 
+          force_clean: false
+          environment: ${{ inputs.environment }}
+          platform: android
           dev_mode: true
           auto_compile: false
