@@ -1,0 +1,37 @@
+name: 'Summary All Inputs'
+description: '自動遍歷並印出所有傳入的 Inputs'
+
+inputs:
+  all_inputs:
+    description: '傳入 ${{ toJSON(inputs) }}'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: 📋 Auto-Display All Inputs
+      shell: python
+      env:
+        PYTHONUTF8: "1"
+        INPUTS_JSON: ${{ inputs.all_inputs }}
+      run: |
+        import os
+        import json
+
+        # 讀取 JSON 字串
+        inputs_data = json.loads(os.getenv('INPUTS_JSON', '{}'))
+        
+        print("="*50)
+        print("🚀 [WORKFLOW RUNTIME CONFIGURATION]")
+        
+        # 遍歷所有 key-value
+        if not inputs_data:
+            print("  (No inputs provided)")
+        else:
+            # 排序 key 讓顯示更整齊
+            for key in sorted(inputs_data.keys()):
+                value = inputs_data[key]
+                # 為了美觀，將 key 左對齊 20 個字元
+                print(f"🔹 {key:<20} : {value}")
+                
+        print("="*50)
