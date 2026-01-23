@@ -41,7 +41,6 @@ def main():
     dev_mode = os.getenv("DEV_MODE", "true").lower() == "true"
     auto_compile = os.getenv("AUTO_COMPILE", "false").lower() == "true"
     environment = os.getenv("ENVIRONMENT")
-    version_name = os.getenv("VERSION_NAME")
     
     # 自動組合設定檔路徑
     mode = "dev" if dev_mode else "release"

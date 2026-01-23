@@ -64,6 +64,5 @@ jobs:
           force_clean: false
           environment: ${{ inputs.environment }}
           platform: ${{ inputs.platform }}
-          version_name: ${{ inputs.version_name }}
           dev_mode: true
           auto_compile: true

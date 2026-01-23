@@ -13,12 +13,6 @@ on:
           - android
           - ios
 
-      version_name:
-        description: '版本名稱'
-        required: true
-        default: '1.2.12'
-        type: string
-
 jobs:
   build:
     runs-on: [self-hosted]
@@ -46,6 +40,5 @@ jobs:
           force_clean: false
           environment: 'production'
           platform: ${{ inputs.platform }}
-          version_name: ${{ inputs.version_name }}
           dev_mode: false
           auto_compile: false

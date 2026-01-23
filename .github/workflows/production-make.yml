@@ -46,6 +46,5 @@ jobs:
           force_clean: false
           environment: 'production'
           platform: ${{ inputs.platform }}
-          version_name: ${{ inputs.version_name }}
           dev_mode: false
           auto_compile: true
