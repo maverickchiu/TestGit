@@ -1,0 +1,69 @@
+name: 內部資源打包
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: '平台'
+        required: true
+        default: 'windows'
+        type: choice
+        options:
+          - windows
+          - android
+          - ios
+
+      environment:
+        description: '環境'
+        required: true
+        default: 'development'
+        type: choice
+        options:
+          - development
+          - test
+          - production
+
+      version_name:
+        description: '版本名稱'
+        required: true
+        default: '1.2.12'
+        type: choice
+        options:
+          - 1.2.12
+          - 1.66.1
+          - 1.66.2
+          - 1.66.3
+          - 1.66.4
+          - 1.66.5
+          - 1.66.6
+          - 1.66.7
+jobs:
+  build:
+    runs-on: [self-hosted]
+
+    steps:
+      - name: check out
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          lfs: true
+          clean: false
+
+      - name: Summary Inputs
+        uses: ./.github/actions/summary-inputs
+        with:
+          all_inputs: ${{ toJSON(inputs) }} 
+
+      - name: Install Packages
+        uses: ./.github/actions/install-packages
+
+      - name: Build Bundle & Compile
+        uses: ./.github/actions/build-core
+        with:
+          git_token: ${{ github.token }} 
+          force_clean: false
+          environment: ${{ inputs.environment }}
+          platform: ${{ inputs.platform }}
+          version_name: ${{ inputs.version_name }}
+          dev_mode: true
+          auto_compile: false
