@@ -14,7 +14,7 @@ on:
     #       - ios
 
 jobs:
-  build:
+  build_windows:
     runs-on: [self-hosted]
 
     steps:
@@ -25,16 +25,10 @@ jobs:
           lfs: true
           clean: false
 
-      - name: Summary Inputs
-        uses: ./.github/actions/summary-inputs
-        with:
-          all_inputs: ${{ toJSON(inputs) }}
-
       - name: Install Packages
         uses: ./.github/actions/install-packages
 
       - name: Build Bundle(Windows)
-        if: ${{ inputs.build_windows }}
         uses: ./.github/actions/build-core
         with:
           git_token: ${{ github.token }} 
@@ -44,8 +38,21 @@ jobs:
           dev_mode: false
           auto_compile: false
 
+  build_android:
+    runs-on: [self-hosted]
+
+    steps:
+      - name: check out
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          lfs: true
+          clean: false
+
+      - name: Install Packages
+        uses: ./.github/actions/install-packages
+
       - name: Build Bundle(Android)
-        if: ${{ inputs.build_android }}
         uses: ./.github/actions/build-core
         with:
           git_token: ${{ github.token }} 
@@ -55,8 +62,21 @@ jobs:
           dev_mode: false
           auto_compile: false
 
+  build_ios:
+    runs-on: [self-hosted]
+
+    steps:
+      - name: check out
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          lfs: true
+          clean: false
+
+      - name: Install Packages
+        uses: ./.github/actions/install-packages
+
       - name: Build Bundle(iOS)
-        if: ${{ inputs.build_ios }}
         uses: ./.github/actions/build-core
         with:
           git_token: ${{ github.token }} 
