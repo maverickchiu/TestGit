@@ -57,9 +57,6 @@ jobs:
           lfs: true
           clean: false
 
-      - name: Install Packages
-        uses: ./.github/actions/install-packages
-
       - name: Build Bundle(Windows)
         uses: ./.github/actions/update-bundles
         with:
@@ -71,7 +68,6 @@ jobs:
           auto_compile: false
 
   build_ios:
-    if: ${{ inputs.build_ios }}
     needs: build_windows # 建議串聯執行，避免 self-hosted 同時跑多個打包任務導致 CPU 炸裂
     if: always() && inputs.build_ios # 即使前一個 windows 沒跑或失敗，只要勾選 ios 也要跑
     runs-on: [self-hosted]
@@ -82,9 +78,6 @@ jobs:
           submodules: recursive
           lfs: true
           clean: false
-
-      - name: Install Packages
-        uses: ./.github/actions/install-packages
 
       - name: Build Bundle(iOS)
         uses: ./.github/actions/update-bundles
@@ -108,9 +101,6 @@ jobs:
           submodules: recursive
           lfs: true
           clean: false
-
-      - name: Install Packages
-        uses: ./.github/actions/install-packages
 
       - name: Build Bundle(Android)
         uses: ./.github/actions/update-bundles

@@ -9,7 +9,7 @@ def prepare_remote():
     # Cocos 預設 remote 產出路徑
     remote_src = os.path.join(project_path, "build", platform, "remote")
     # 準備發布到 GitHub Pages 的暫存目錄
-    pages_dest = os.path.join(project_path, "public_pages")
+    pages_dest = os.path.join(project_path, "public_pages", platform)
 
     print(f"🔍 Checking remote folder at: {remote_src}")
 

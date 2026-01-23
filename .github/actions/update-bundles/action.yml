@@ -66,32 +66,7 @@ runs:
       with:
         github_token: ${{ inputs.git_token || github.token }}
         publish_dir: ./public_pages # 這裡要對應 Python 腳本產出的目錄
-        # keep_files: true # 如果你不想覆蓋舊的 Bundle，可以開啟此選項
+        keep_files: true # 如果你不想覆蓋舊的 Bundle，可以開啟此選項
         user_name: 'github-actions[bot]'
         user_email: 'github-actions[bot]@users.noreply.github.com'
         publish_branch: gh-pages
-
-
-  build_ios:
-    runs-on: [self-hosted]
-
-    steps:
-      - name: check out
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          lfs: true
-          clean: false
-
-      - name: Install Packages
-        uses: ./.github/actions/install-packages
-
-      - name: Build Bundle(iOS)
-        uses: ./.github/actions/build-core
-        with:
-          git_token: ${{ github.token }} 
-          force_clean: false
-          environment: 'production'
-          platform: ios
-          dev_mode: false
-          auto_compile: false
