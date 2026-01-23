@@ -7,7 +7,7 @@ def update_engine_macro():
     file_path = "./settings/v2/packages/engine.json"
     
     # 從環境變數讀取 IS_DEBUG (GitHub Actions 會傳入)
-    is_debug_str = os.getenv("IS_DEBUG", "false").lower()
+    is_debug_str = os.getenv("DEV_MODE", "false").lower()
     debug_val = (is_debug_str == "true")
 
     try:

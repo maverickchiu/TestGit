@@ -60,6 +60,5 @@ jobs:
           environment: ${{ inputs.environment }}
           platform: ${{ inputs.platform }}
           version_name: ${{ inputs.version_name }}
-          is_debug: true
           dev_mode: true
           auto_compile: true
