@@ -7,16 +7,19 @@ on:
         description: '打包Windows環境'
         required: true
         default: true
+        type: boolean
 
       build_android:
         description: '打包Android環境'
         required: true
         default: true
+        type: boolean
 
       build_ios:
         description: '打包iOS環境'
         required: true
         default: true
+        type: boolean
 
       environment:
         description: '環境'
