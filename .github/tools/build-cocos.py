@@ -3,26 +3,25 @@ import os, subprocess, sys
 import time
 
 def get_startup_info():
-    """在 Windows 環境下隱藏彈出的 GUI 視窗"""
     if os.name == 'nt':
         info = subprocess.STARTUPINFO()
         info.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-        info.wShowWindow = 0  # SW_HIDE: 隱藏視窗
+        info.wShowWindow = 0 
         return info
     return None
 
-def run_cocos_stage(cocos_path, project_path, stage, config_path, startup_info):
-    """執行 Cocos 指定階段的構建任務"""
-    print(f"🎬 Running Cocos Stage: {stage}...", flush=True)
+def run_cocos_stage(cocos_path, project_path, stage, config_path, startup_info, game_name):
+    print(f"🎬 Running Cocos Stage: {stage} for {game_name}...", flush=True)
     
-    # 核心修正：將 stage 放入 params，並加上 verbosity 讓 Log 稍微清楚一點
-    params = f"configPath={config_path};stage={stage};force=true;verbosity=minimal"
+    # 這裡將組合好的 game_name 帶入 Cocos 的 build 參數
+    # Cocos Creator 3.x 支援透過 title 參數修改遊戲標題/產出檔名
+    params = f"configPath={config_path};stage={stage};force=true;verbosity=minimal;title={game_name}"
     
     cmd = [
         cocos_path,
-        "--batch",              # 強制進入無介面模式
+        "--batch",
         "--project", project_path,
-        "--build", params
+        "--build", params,
     ]
     
     result = subprocess.run(
@@ -34,19 +33,41 @@ def run_cocos_stage(cocos_path, project_path, stage, config_path, startup_info):
     return result.returncode
 
 def main():
-    # 獲取環境變數
     cocos_path = os.getenv("COCOS_PATH")
-    project_path = os.getenv("GITHUB_WORKSPACE", os.getcwd()) # 增加預設值
+    project_path = os.getenv("GITHUB_WORKSPACE", os.getcwd())
     platform = os.getenv("PLATFORM")
     dev_mode = os.getenv("DEV_MODE", "true").lower() == "true"
     auto_compile = os.getenv("AUTO_COMPILE", "false").lower() == "true"
     
-    # 自動組合設定檔路徑
+    # 獲取命名相關變數
+    environment = os.getenv("ENVIRONMENT", "dev").lower()  # test, dev, production
+    version_name = os.getenv("VERSION_NAME", "1.0.0")
+    build_no = os.getenv("GITHUB_RUN_NUMBER", "0") # GitHub Actions 自動提供的編號
+    
+    # --- 命名邏輯處理 ---
+    # 1. 決定環境前綴
+    env_prefix = ""
+    if environment == "test":
+        env_prefix = "t"
+    elif environment == "dev":
+        env_prefix = "d"
+    # production 則維持空字串 ""
+
+    # 2. 決定開發/正式結尾
+    suffix = "_dev" if dev_mode else ""
+
+    # 3. 組合最終名稱: %env%%version_name%(%buildNo%)%suffix%
+    # 範例: t1.2.12(42)_dev
+    game_name = f"{env_prefix}{version_name}({build_no}){suffix}"
+    
+    # ------------------
+
     mode = "dev" if dev_mode else "release"
     config_name = f"{platform}-{mode}.json"
     config_path = os.path.join(project_path, "build-configs", config_name)
 
-    print(f"🚀 Initializing build process for {platform} ({mode})...")
+    print(f"🚀 Initializing build process...")
+    print(f"📦 Target Name: {game_name}")
     
     if not os.path.exists(config_path):
         print(f"❌ Config not found: {config_path}")
@@ -54,30 +75,32 @@ def main():
 
     startup_info = get_startup_info()
 
-    # --- Step 1: Build Stage (產生原生工程) ---
-    print("🛠 Step 1: Generating Native Project...")
-    # 明確指定只跑 build 階段
-    exit_code = run_cocos_stage(cocos_path, project_path, "build", config_path, startup_info)
-    
+    # --- Step 1: Build Stage ---
+    exit_code = run_cocos_stage(cocos_path, project_path, "build", config_path, startup_info, game_name)
     if exit_code not in [0, 36]:
-        print(f"❌ Build stage failed with exit code: {exit_code}")
         sys.exit(exit_code)
 
-    # --- Step 2: Make Stage (編譯產出物) ---
+    # --- Step 2: Make Stage ---
     if auto_compile:
-        # 給檔案系統一點時間釋放鎖定，避免 "Unable to move cache" 錯誤
         print("⏳ Waiting for file system to sync...")
         time.sleep(5) 
-
-        print("🚀 Step 2: Compiling Executable (Make Stage)...")
-        # 修正：改用 --build 搭配 stage=make，而非原本的 --make
-        exit_code_make = run_cocos_stage(cocos_path, project_path, "make", config_path, startup_info)
-        
+        exit_code_make = run_cocos_stage(cocos_path, project_path, "make", config_path, startup_info, game_name)
         if exit_code_make not in [0, 36]:
-            print(f"❌ Make stage failed with exit code: {exit_code_make}")
             sys.exit(exit_code_make)
 
-    print(f"✅ {platform.upper()} build process finished successfully.")
+    print(f"✅ {platform.upper()} build process finished: {game_name}")
+
+    github_env = os.getenv('GITHUB_ENV')
+    if github_env:
+        with open(github_env, 'a') as f:
+            f.write(f"GAME_NAME={game_name}\n")
+        print(f"✨ Set env.GAME_NAME to: {game_name}")
+
+    # 同時也寫入輸出 (Output)，適合特定 Step 調用
+    github_output = os.getenv('GITHUB_OUTPUT')
+    if github_output:
+        with open(github_output, 'a') as f:
+            f.write(f"game_name={game_name}\n")
 
 if __name__ == "__main__":
     main()

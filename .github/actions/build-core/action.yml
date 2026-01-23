@@ -41,16 +41,7 @@ inputs:
     description: '版本名稱'
     required: true
     default: '1.2.12'
-    type: choice
-    options:
-      - 1.2.12
-      - 1.66.1
-      - 1.66.2
-      - 1.66.3
-      - 1.66.4
-      - 1.66.5
-      - 1.66.6
-      - 1.66.7
+    type: string
 
   git_token:
     description: 'Git Token'
@@ -120,6 +111,8 @@ runs:
         PLATFORM: ${{ inputs.platform }}
         DEV_MODE: ${{ inputs.dev_mode }}
         AUTO_COMPILE: ${{ inputs.auto_compile }}
+        ENVIRONMENT: ${{ inputs.environment }}
+        VERSION_NAME: ${{ inputs.version_name }}
       run: |
         import subprocess, os, sys
         script_path = os.path.join(os.environ['GITHUB_WORKSPACE'], '.github', 'tools', 'build-cocos.py')

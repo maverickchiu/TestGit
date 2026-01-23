@@ -1,4 +1,4 @@
-name: 執行檔打包工具
+name: 內部建置工具
 
 on:
   workflow_dispatch:
@@ -12,6 +12,7 @@ on:
           - windows
           - android
           - ios
+
       environment:
         description: '環境'
         required: true
@@ -21,6 +22,7 @@ on:
           - development
           - test
           - production
+
       version_name:
         description: '版本名稱'
         required: true
@@ -57,15 +59,7 @@ jobs:
           force_clean: false
           environment: ${{ inputs.environment }}
           platform: ${{ inputs.platform }}
+          version_name: ${{ inputs.version_name }}
           is_debug: true
           dev_mode: true
           auto_compile: true
-
-
-      - name: Run a one-line script
-        run: echo ${{ inputs.platform }} ${{ inputs.environment }} ${{ inputs.version_name }}
-
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.

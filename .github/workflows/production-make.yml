@@ -1,0 +1,47 @@
+name: 外部建置工具
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: '平台'
+        required: true
+        default: 'windows'
+        type: choice
+        options:
+          - windows
+          - android
+          - ios
+
+      version_name:
+        description: '版本名稱'
+        required: true
+        default: '1.2.12'
+        type: string
+
+jobs:
+  build:
+    runs-on: [self-hosted]
+
+    steps:
+      - name: check out
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          lfs: true
+          clean: false
+
+      - name: Install Packages
+        uses: ./.github/actions/install-packages
+
+      - name: Build Bundle & Compile
+        uses: ./.github/actions/build-core
+        with:
+          git_token: ${{ github.token }} 
+          force_clean: false
+          environment: 'production'
+          platform: ${{ inputs.platform }}
+          version_name: ${{ inputs.version_name }}
+          is_debug: false
+          dev_mode: false
+          auto_compile: true
