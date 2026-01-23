@@ -10,12 +10,10 @@ def get_startup_info():
         return info
     return None
 
-def run_cocos_stage(cocos_path, project_path, stage, config_path, startup_info, game_name):
-    print(f"🎬 Running Cocos Stage: {stage} for {game_name}...", flush=True)
+def run_cocos_stage(cocos_path, project_path, stage, config_path, startup_info):
+    print(f"🎬 Running Cocos Stage: {stage}...", flush=True)
     
-    # 這裡將組合好的 game_name 帶入 Cocos 的 build 參數
-    # Cocos Creator 3.x 支援透過 title 參數修改遊戲標題/產出檔名
-    params = f"configPath={config_path};stage={stage};force=true;verbosity=minimal;name={game_name}"
+    params = f"configPath={config_path};stage={stage};force=true;verbosity=minimal"
     
     cmd = [
         cocos_path,
@@ -23,7 +21,7 @@ def run_cocos_stage(cocos_path, project_path, stage, config_path, startup_info, 
         "--project", project_path,
         "--build", params,
     ]
-    
+
     print(f"Executing: {cmd}")
     result = subprocess.run(
         cmd, 
@@ -47,22 +45,6 @@ def main():
     version_name = os.getenv("VERSION_NAME", "1.0.0")
     build_no = os.getenv("GITHUB_RUN_NUMBER", "0") # GitHub Actions 自動提供的編號
     
-    # --- 命名邏輯處理 ---
-    # 1. 決定環境前綴
-    env_prefix = ""
-    if environment == "test":
-        env_prefix = "t"
-    elif environment == "dev":
-        env_prefix = "d"
-    # production 則維持空字串 ""
-
-    # 2. 決定開發/正式結尾
-    suffix = "_dev" if dev_mode else ""
-
-    # 3. 組合最終名稱: %env%%version_name%(%buildNo%)%suffix%
-    # 範例: t1.2.12(42)_dev
-    game_name = f"{env_prefix}{version_name}({build_no}){suffix}"
-    
     # ------------------
 
     mode = "dev" if dev_mode else "release"
@@ -70,7 +52,6 @@ def main():
     config_path = os.path.join(project_path, "build-configs", config_name)
 
     print(f"🚀 Initializing build process...")
-    print(f"📦 Target Name: {game_name}")
     
     if not os.path.exists(config_path):
         print(f"❌ Config not found: {config_path}")
@@ -79,7 +60,7 @@ def main():
     startup_info = get_startup_info()
 
     # --- Step 1: Build Stage ---
-    exit_code = run_cocos_stage(cocos_path, project_path, "build", config_path, startup_info, game_name)
+    exit_code = run_cocos_stage(cocos_path, project_path, "build", config_path, startup_info)
     if exit_code not in [0, 36]:
         sys.exit(exit_code)
 
@@ -87,23 +68,11 @@ def main():
     if auto_compile:
         print("⏳ Waiting for file system to sync...")
         time.sleep(5) 
-        exit_code_make = run_cocos_stage(cocos_path, project_path, "make", config_path, startup_info, game_name)
+        exit_code_make = run_cocos_stage(cocos_path, project_path, "make", config_path, startup_info)
         if exit_code_make not in [0, 36]:
             sys.exit(exit_code_make)
 
-    print(f"✅ {platform.upper()} build process finished: {game_name}")
-
-    github_env = os.getenv('GITHUB_ENV')
-    if github_env:
-        with open(github_env, 'a') as f:
-            f.write(f"GAME_NAME={game_name}\n")
-        print(f"✨ Set env.GAME_NAME to: {game_name}")
-
-    # 同時也寫入輸出 (Output)，適合特定 Step 調用
-    github_output = os.getenv('GITHUB_OUTPUT')
-    if github_output:
-        with open(github_output, 'a') as f:
-            f.write(f"game_name={game_name}\n")
+    print(f"✅ {platform.upper()} build process finished")
 
 if __name__ == "__main__":
     main()

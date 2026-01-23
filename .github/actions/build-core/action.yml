@@ -103,12 +103,6 @@ runs:
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v2
 
-    - name: Setup Java JDK
-      uses: actions/setup-java@v4
-      with:
-        distribution: 'zulu'
-        java-version: '17'   
-
     - name: Build Cocos Project
       shell: python
       env:
