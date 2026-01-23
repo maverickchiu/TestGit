@@ -12,37 +12,43 @@ on:
           - development
           - test
           - production
-
       build_windows:
         description: '打包Windows環境'
         required: true
         default: true
         type: boolean
-
       build_android:
         description: '打包Android環境'
         required: true
         default: true
         type: boolean
-
       build_ios:
         description: '打包iOS環境'
         required: true
         default: true
         type: boolean
 
+# 防止多個打包任務同時在同一個 Runner 上打架
+concurrency:
+  group: cocos-bundle-update-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   summary_inputs:
+    runs-on: [self-hosted] # 必須指定 runner
     steps:
+      - name: Checkout for Summary Action
+        uses: actions/checkout@v4 # 必須先 checkout 才能使用本地的 summary-inputs action
+      
       - name: Summary Inputs
         uses: ./.github/actions/summary-inputs
         with:
-          all_inputs: ${{ toJSON(inputs) }} 
+          all_inputs: ${{ toJSON(inputs) }}
 
   build_windows:
     if: ${{ inputs.build_windows }}
+    needs: summary_inputs # 等 summary 跑完再開始
     runs-on: [self-hosted]
-
     steps:
       - name: check out
         uses: actions/checkout@v4
@@ -66,8 +72,9 @@ jobs:
 
   build_ios:
     if: ${{ inputs.build_ios }}
+    needs: build_windows # 建議串聯執行，避免 self-hosted 同時跑多個打包任務導致 CPU 炸裂
+    if: always() && inputs.build_ios # 即使前一個 windows 沒跑或失敗，只要勾選 ios 也要跑
     runs-on: [self-hosted]
-
     steps:
       - name: check out
         uses: actions/checkout@v4
@@ -91,8 +98,9 @@ jobs:
 
   build_android:
     if: ${{ inputs.build_android }}
+    needs: [summary_inputs, build_ios] # 確保最後跑
+    if: always() && inputs.build_android
     runs-on: [self-hosted]
-
     steps:
       - name: check out
         uses: actions/checkout@v4
