@@ -11,10 +11,32 @@ def get_startup_info():
         return info
     return None
 
+def run_cocos_stage(cocos_path, project_path, stage, config_path, startup_info):
+    """執行 Cocos 指定階段的構建任務"""
+    print(f"🎬 Running Cocos Stage: {stage}...", flush=True)
+    
+    # 核心修正：將 stage 放入 params，並加上 verbosity 讓 Log 稍微清楚一點
+    params = f"configPath={config_path};stage={stage};force=true;verbosity=minimal"
+    
+    cmd = [
+        cocos_path,
+        "--batch",              # 強制進入無介面模式
+        "--project", project_path,
+        "--build", params
+    ]
+    
+    result = subprocess.run(
+        cmd, 
+        stdout=sys.stdout, 
+        stderr=sys.stderr, 
+        startupinfo=startup_info
+    )
+    return result.returncode
+
 def main():
-    # 獲取參數
+    # 獲取環境變數
     cocos_path = os.getenv("COCOS_PATH")
-    project_path = os.getenv("GITHUB_WORKSPACE")
+    project_path = os.getenv("GITHUB_WORKSPACE", os.getcwd()) # 增加預設值
     platform = os.getenv("PLATFORM")
     dev_mode = os.getenv("DEV_MODE", "true").lower() == "true"
     auto_compile = os.getenv("AUTO_COMPILE", "false").lower() == "true"
@@ -24,60 +46,36 @@ def main():
     config_name = f"{platform}-{mode}.json"
     config_path = os.path.join(project_path, "build-configs", config_name)
 
-    print(f"🚀 Initializing build for {platform} ({mode})...")
+    print(f"🚀 Initializing build process for {platform} ({mode})...")
     
     if not os.path.exists(config_path):
         print(f"❌ Config not found: {config_path}")
         sys.exit(1)
 
-    # 基礎參數：加入 force=true 嘗試跳過某些插件報錯
-    params = f"platform={platform};configPath={config_path};force=true"
     startup_info = get_startup_info()
 
-    # --- Step 1: Build (產生原生工程) ---
-    print("🛠 Step 1: Generating Project (Headless Mode)...")
-    build_cmd = [
-        cocos_path,
-        "--batch",              # 強制進入無介面批次模式
-        "--project", project_path,
-        "--build", params
-    ]
+    # --- Step 1: Build Stage (產生原生工程) ---
+    print("🛠 Step 1: Generating Native Project...")
+    # 明確指定只跑 build 階段
+    exit_code = run_cocos_stage(cocos_path, project_path, "build", config_path, startup_info)
     
-    # 執行並同步輸出 Log
-    result = subprocess.run(
-        build_cmd, 
-        stdout=sys.stdout, 
-        stderr=sys.stderr, 
-        startupinfo=startup_info
-    )
-    
-    if result.returncode not in [0, 36]:
-        print(f"❌ Build failed with exit code: {result.returncode}")
-        sys.exit(result.returncode)
+    if exit_code not in [0, 36]:
+        print(f"❌ Build stage failed with exit code: {exit_code}")
+        sys.exit(exit_code)
 
-    # --- Step 2: Make (編譯專案) ---
+    # --- Step 2: Make Stage (編譯產出物) ---
     if auto_compile:
+        # 給檔案系統一點時間釋放鎖定，避免 "Unable to move cache" 錯誤
         print("⏳ Waiting for file system to sync...")
-        time.sleep(5) # 給系統 5 秒鐘釋放檔案鎖定
+        time.sleep(5) 
 
-        print("🚀 Step 2: Compiling / Making Package...")
-        make_cmd = [
-            cocos_path,
-            "--project", project_path,
-            "--make", params,
-            "--force"
-        ]
+        print("🚀 Step 2: Compiling Executable (Make Stage)...")
+        # 修正：改用 --build 搭配 stage=make，而非原本的 --make
+        exit_code_make = run_cocos_stage(cocos_path, project_path, "make", config_path, startup_info)
         
-        result_make = subprocess.run(
-            make_cmd, 
-            stdout=sys.stdout, 
-            stderr=sys.stderr, 
-            startupinfo=startup_info
-        )
-        
-        if result_make.returncode not in [0, 36]:
-            print(f"❌ Compilation failed with exit code: {result_make.returncode}")
-            sys.exit(result_make.returncode)
+        if exit_code_make not in [0, 36]:
+            print(f"❌ Make stage failed with exit code: {exit_code_make}")
+            sys.exit(exit_code_make)
 
     print(f"✅ {platform.upper()} build process finished successfully.")
 
