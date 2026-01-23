@@ -52,7 +52,7 @@ jobs:
       - name: Summary Inputs
         uses: ./.github/actions/summary-inputs
         with:
-          all_inputs: ${{ toJSON(inputs) }}
+          all_inputs: ${{ toJSON(inputs) }} 
 
       - name: Install Packages
         uses: ./.github/actions/install-packages

@@ -3,7 +3,7 @@ description: '自動遍歷並印出所有傳入的 Inputs'
 
 inputs:
   all_inputs:
-    description: '傳入 ${{ toJSON(inputs) }}'
+    description: '傳入 JSON 格式的 inputs 字串' # 這裡不能有 ${{ }}
     required: true
 
 runs:
@@ -18,20 +18,21 @@ runs:
         import os
         import json
 
-        # 讀取 JSON 字串
-        inputs_data = json.loads(os.getenv('INPUTS_JSON', '{}'))
-        
-        print("="*50)
-        print("🚀 [WORKFLOW RUNTIME CONFIGURATION]")
-        
-        # 遍歷所有 key-value
-        if not inputs_data:
-            print("  (No inputs provided)")
-        else:
-            # 排序 key 讓顯示更整齊
-            for key in sorted(inputs_data.keys()):
-                value = inputs_data[key]
-                # 為了美觀，將 key 左對齊 20 個字元
-                print(f"🔹 {key:<20} : {value}")
-                
-        print("="*50)
+        try:
+            # 讀取 JSON 字串
+            inputs_data = json.loads(os.getenv('INPUTS_JSON', '{}'))
+            
+            print("="*50)
+            print("🚀 [WORKFLOW RUNTIME CONFIGURATION]")
+            
+            if not inputs_data:
+                print("  (No inputs provided)")
+            else:
+                for key in sorted(inputs_data.keys()):
+                    value = inputs_data[key]
+                    print(f"🔹 {key:<20} : {value}")
+                    
+            print("="*50)
+        except Exception as e:
+            print(f"❌ Error parsing inputs JSON: {e}")
+            print(f"Raw data: {os.getenv('INPUTS_JSON')}")
