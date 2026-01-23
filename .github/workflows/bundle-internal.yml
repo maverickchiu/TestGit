@@ -90,7 +90,6 @@ jobs:
           auto_compile: false
 
   build_android:
-    if: ${{ inputs.build_android }}
     needs: [summary_inputs, build_ios] # 確保最後跑
     if: always() && inputs.build_android
     runs-on: [self-hosted]
