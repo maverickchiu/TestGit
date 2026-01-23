@@ -56,8 +56,6 @@ def main():
 
     startup_info = get_startup_info()
 
-    game_name = 
-
     # --- Step 1: Build Stage (產生原生工程) ---
     print("🛠 Step 1: Generating Native Project...")
     # 明確指定只跑 build 階段
