@@ -1,4 +1,4 @@
-name: 內部資源打包
+name: 內部資源更新
 
 on:
   workflow_dispatch:
