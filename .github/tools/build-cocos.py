@@ -15,7 +15,7 @@ def run_cocos_stage(cocos_path, project_path, stage, config_path, startup_info, 
     
     # 這裡將組合好的 game_name 帶入 Cocos 的 build 參數
     # Cocos Creator 3.x 支援透過 title 參數修改遊戲標題/產出檔名
-    params = f"configPath={config_path};stage={stage};force=true;verbosity=minimal;title={game_name}"
+    params = f"configPath={config_path};stage={stage};force=true;verbosity=minimal;name={game_name}"
     
     cmd = [
         cocos_path,
