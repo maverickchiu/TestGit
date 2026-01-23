@@ -24,11 +24,14 @@ def run_cocos_stage(cocos_path, project_path, stage, config_path, startup_info, 
         "--build", params,
     ]
     
+    print(f"Executing: {cmd}")
     result = subprocess.run(
         cmd, 
-        stdout=sys.stdout, 
-        stderr=sys.stderr, 
-        startupinfo=startup_info
+        stdout=None, 
+        stderr=None, 
+        text=True,
+        shell=True,
+        check=False
     )
     return result.returncode
 
