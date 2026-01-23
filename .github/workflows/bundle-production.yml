@@ -1,4 +1,4 @@
-name: 外部建置工具
+name: 外部資源更新
 
 on:
   workflow_dispatch:
