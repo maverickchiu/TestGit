@@ -1,0 +1,79 @@
+{
+    "importBase": "import",
+    "nativeBase": "native",
+    "name": "girls",
+    "deps": [],
+    "uuids": [
+        "0f6585498",
+        "6c340a10-4344-41ab-bba4-0408488e24e2",
+        "6c340a10-4344-41ab-bba4-0408488e24e2@6c48a",
+        "6c340a10-4344-41ab-bba4-0408488e24e2@f9941",
+        "c859cf9b-ff30-4abb-ab32-663653d10585",
+        "c859cf9b-ff30-4abb-ab32-663653d10585@6c48a",
+        "c859cf9b-ff30-4abb-ab32-663653d10585@f9941"
+    ],
+    "paths": {
+        "c859cf9b-ff30-4abb-ab32-663653d10585": [
+            "000",
+            "cc.ImageAsset",
+            1
+        ],
+        "c859cf9b-ff30-4abb-ab32-663653d10585@6c48a": [
+            "000/texture",
+            "cc.Texture2D",
+            1
+        ],
+        "c859cf9b-ff30-4abb-ab32-663653d10585@f9941": [
+            "000/spriteFrame",
+            "cc.SpriteFrame",
+            1
+        ],
+        "6c340a10-4344-41ab-bba4-0408488e24e2": [
+            "001",
+            "cc.ImageAsset",
+            1
+        ],
+        "6c340a10-4344-41ab-bba4-0408488e24e2@6c48a": [
+            "001/texture",
+            "cc.Texture2D",
+            1
+        ],
+        "6c340a10-4344-41ab-bba4-0408488e24e2@f9941": [
+            "001/spriteFrame",
+            "cc.SpriteFrame",
+            1
+        ]
+    },
+    "scenes": {},
+    "packs": {
+        "0f6585498": [
+            "6c340a10-4344-41ab-bba4-0408488e24e2@6c48a",
+            "c859cf9b-ff30-4abb-ab32-663653d10585@6c48a"
+        ]
+    },
+    "versions": {
+        "import": [
+            "0f6585498",
+            "5cc73",
+            "6c340a10-4344-41ab-bba4-0408488e24e2",
+            "c16a8",
+            "6c340a10-4344-41ab-bba4-0408488e24e2@f9941",
+            "d83da",
+            "c859cf9b-ff30-4abb-ab32-663653d10585",
+            "c16a8",
+            "c859cf9b-ff30-4abb-ab32-663653d10585@f9941",
+            "0d5a7"
+        ],
+        "native": [
+            "6c340a10-4344-41ab-bba4-0408488e24e2",
+            "1bf5e",
+            "c859cf9b-ff30-4abb-ab32-663653d10585",
+            "c88d2"
+        ]
+    },
+    "redirect": [],
+    "debug": true,
+    "extensionMap": {},
+    "hasPreloadScript": true,
+    "dependencyRelationships": {}
+}
