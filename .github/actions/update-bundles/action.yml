@@ -59,14 +59,34 @@ runs:
       run: |
         import subprocess, os
         script_path = os.path.join(os.environ['GITHUB_WORKSPACE'], '.github', 'tools', 'prepare-remote.py')
+        
+        # 執行原本的搬移腳本
         subprocess.run(['python', '-u', script_path], check=True)
+        
+        # --- 新增：強制列出 public_pages 目錄內容，讓 Log 看得見 ---
+        print("-" * 30)
+        print("Final files in ./public_pages to be deployed:")
+        target_dir = './public_pages'
+        if os.path.exists(target_dir):
+            file_count = 0
+            for root, dirs, files in os.walk(target_dir):
+                for file in files:
+                    file_count += 1
+                    print(f"  - {os.path.join(root, file)}")
+            print(f"Total files found: {file_count}")
+        else:
+            print("ERROR: ./public_pages directory NOT FOUND!")
+        print("-" * 30)
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v4
       with:
         github_token: ${{ inputs.git_token || github.token }}
-        publish_dir: ./public_pages # 這裡要對應 Python 腳本產出的目錄
-        keep_files: true # 如果你不想覆蓋舊的 Bundle，可以開啟此選項
+        publish_dir: ./public_pages
+        keep_files: true 
         user_name: 'github-actions[bot]'
         user_email: 'github-actions[bot]@users.noreply.github.com'
         publish_branch: gh-pages
+        # --- 建議新增以下兩個參數 ---
+        enable_jekyll: false # 必加！防止 GitHub Pages 忽略 Cocos 產出的底線開頭資料夾
+        force_orphan: false   # 因為你有 keep_files，這項保持 false 即可
