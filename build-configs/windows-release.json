@@ -72,7 +72,7 @@
     },
     "native": {
       "encrypted": true,
-      "xxteaKey": "j+i3-942/84au_%a",
+      "xxteaKey": "ji394284auau",
       "compressZip": true,
       "JobSystem": "none",
       "__version__": "1.0.2"
