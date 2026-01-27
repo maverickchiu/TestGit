@@ -1,25 +1,25 @@
 {
-  "buildCode": "19",
+  "buildCode": "20",
   "bundleInfos": [
     {
       "name": "girls",
-      "version": "05b40",
+      "version": "ec946",
       "items": [
         {
-          "relative": "cc.config.05b40.json",
-          "md5": "e3023eff928459cbb20cf1c2a9c892fb"
+          "relative": "cc.config.ec946.json",
+          "md5": "6a7f19b04aaedb3a4b342c67ef8800a5"
         },
         {
-          "relative": "import/01/0173af53c.7d0cd.json",
-          "md5": "7d0cdf13470e874debe0ccc1c2a5f64c"
+          "relative": "import/01/013c318fe.8d416.json",
+          "md5": "8d4162b3496cf12d9cd200a1560643b7"
         },
         {
           "relative": "import/6c/6c340a10-4344-41ab-bba4-0408488e24e2.c16a8.json",
           "md5": "c16a8f853c64bf39777846c27bfac37d"
         },
         {
-          "relative": "import/6c/6c340a10-4344-41ab-bba4-0408488e24e2@f9941.d83da.json",
-          "md5": "d83da56f879ec2c309ad417cb0c99625"
+          "relative": "import/6c/6c340a10-4344-41ab-bba4-0408488e24e2@f9941.4b5a0.json",
+          "md5": "4b5a056fefb06daf96bf499605266baf"
         },
         {
           "relative": "import/7e/7e4fb4b8-2f78-460d-99ce-7c713754e6d3.c16a8.json",
@@ -30,15 +30,31 @@
           "md5": "656906b4c06c63d21ccbd5c5f164e122"
         },
         {
+          "relative": "import/97/97662679-e5c2-4fcf-a237-2c2bf97ee651.c16a8.json",
+          "md5": "c16a8f853c64bf39777846c27bfac37d"
+        },
+        {
+          "relative": "import/97/97662679-e5c2-4fcf-a237-2c2bf97ee651@f9941.37675.json",
+          "md5": "37675928c5c6e87caa7f657dd31f223a"
+        },
+        {
+          "relative": "import/af/afd9253c-9219-4c49-b04b-44323980f73a.c16a8.json",
+          "md5": "c16a8f853c64bf39777846c27bfac37d"
+        },
+        {
+          "relative": "import/af/afd9253c-9219-4c49-b04b-44323980f73a@f9941.8db60.json",
+          "md5": "8db603651610b3eabb67c5d158f183b4"
+        },
+        {
           "relative": "import/c8/c859cf9b-ff30-4abb-ab32-663653d10585.c16a8.json",
           "md5": "c16a8f853c64bf39777846c27bfac37d"
         },
         {
-          "relative": "import/c8/c859cf9b-ff30-4abb-ab32-663653d10585@f9941.0d5a7.json",
-          "md5": "0d5a7e39dbb660c9930b4a9bc4652d1b"
+          "relative": "import/c8/c859cf9b-ff30-4abb-ab32-663653d10585@f9941.dc150.json",
+          "md5": "dc1509340887abc5aae62e3f795b637b"
         },
         {
-          "relative": "index.05b40.js",
+          "relative": "index.ec946.js",
           "md5": "b6f37baaf89e8925f1e56b67f1ff1754"
         },
         {
@@ -48,6 +64,14 @@
         {
           "relative": "native/7e/7e4fb4b8-2f78-460d-99ce-7c713754e6d3.9f04d.jpg",
           "md5": "9f04d7b479f68bc0de578e892b49ccb7"
+        },
+        {
+          "relative": "native/97/97662679-e5c2-4fcf-a237-2c2bf97ee651.8322b.jpg",
+          "md5": "8322b02105a839fc80cc5dad05ae6fea"
+        },
+        {
+          "relative": "native/af/afd9253c-9219-4c49-b04b-44323980f73a.d8371.jpg",
+          "md5": "d83714cb127b4b58cf59771ed0e1beb1"
         },
         {
           "relative": "native/c8/c859cf9b-ff30-4abb-ab32-663653d10585.c88d2.jpg",
