@@ -58,7 +58,7 @@ runs:
       env:
         PLATFORM: ${{ inputs.platform }}
         ENVIRONMENT: ${{ inputs.environment }}
-      run: python .github/tools/pack_build.py
+      run: py .github/tools/pack_build.py
 
     - name: 2. Smart Rename
       id: rename
@@ -71,7 +71,7 @@ runs:
         IN_BUNDLE_CODE: ${{ inputs.bundle_code }}
         PLATFORM: ${{ inputs.platform }}
         GITHUB_RUN_NUMBER: ${{ github.run_number }}
-      run: python .github/tools/rename_build.py
+      run: py .github/tools/rename_build.py
 
     - name: 3. Upload to Release
       uses: softprops/action-gh-release@v2
