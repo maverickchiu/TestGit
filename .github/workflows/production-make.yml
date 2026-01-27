@@ -48,3 +48,13 @@ jobs:
           platform: ${{ inputs.platform }}
           dev_mode: false
           auto_compile: true
+
+      - name: Upload Release
+        uses: ./.github/actions/upload-release
+        with:
+          environment: 'production'
+          platform: ${{ inputs.platform }}
+          dev_mode: false
+          version_name: ${{ inputs.version_name }}
+          signing_type: 'release'
+          bundle_code: ''

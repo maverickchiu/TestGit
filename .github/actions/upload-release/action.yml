@@ -1,0 +1,82 @@
+name: Upload Release
+description: '上傳 Release 包'
+
+inputs:
+  environment:
+    description: '環境'
+    required: true
+    default: 'development'
+    type: choice
+    options:
+      - development
+      - test
+      - production
+
+  platform:
+    description: '平台'
+    required: true
+    default: 'windows'
+    type: choice
+    options:
+      - windows
+      - android
+      - ios
+
+  dev_mode:
+    description: '開發者模式'
+    required: true
+    default: true
+    type: boolean
+
+  version_name:
+    description: '版本名稱'
+    required: true
+    default: '1.0.0'
+    type: string
+
+  signing_type:
+    description: '簽名類型'
+    required: false
+    default: 'debug'
+    type: choice
+    options:
+      - debug
+      - release
+
+  bundle_code:
+    description: 'Bundle Code'
+    required: false
+    default: ''
+    type: string
+
+runs:
+  using: "composite" 
+  steps:  
+    - name: 1. Collect Assets
+      id: collect
+      shell: python
+      env:
+        PLATFORM: ${{ inputs.platform }}
+        ENVIRONMENT: ${{ inputs.environment }}
+      run: python .github/tools/pack_build.py
+
+    - name: 2. Smart Rename
+      id: rename
+      shell: python
+      env:
+        COLLECTED_PATH: ${{ steps.collect.outputs.collected_path }}
+        IN_VERSION_NAME: ${{ inputs.version_name }}
+        IN_ENVIRONMENT: ${{ inputs.environment }}
+        IN_SIGNING_TYPE: ${{ inputs.signing_type }}
+        IN_BUNDLE_CODE: ${{ inputs.bundle_code }}
+        PLATFORM: ${{ inputs.platform }}
+        GITHUB_RUN_NUMBER: ${{ github.run_number }}
+      run: python .github/tools/rename_build.py
+
+    - name: 3. Upload to Release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: ${{ steps.rename.outputs.artifact_path }}
+        tag_name: v${{ inputs.version_name }}.${{ github.run_number }}
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
