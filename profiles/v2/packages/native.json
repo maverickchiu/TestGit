@@ -1,0 +1,52 @@
+{
+  "__version__": "1.0.2",
+  "builder": {
+    "taskOptionsMap": {
+      "1769050739004": {
+        "encrypted": false,
+        "xxteaKey": "1es1Aje+lC8L1CzK",
+        "compressZip": false,
+        "JobSystem": "none",
+        "__version__": "1.0.2"
+      },
+      "1769051216692": {
+        "encrypted": true,
+        "xxteaKey": "j+i3-942/84au_%a",
+        "compressZip": true,
+        "JobSystem": "none",
+        "__version__": "1.0.2"
+      },
+      "1769051723722": {
+        "encrypted": false,
+        "xxteaKey": "1es1Aje+lC8L1CzK",
+        "compressZip": false,
+        "JobSystem": "none",
+        "__version__": "1.0.2"
+      },
+      "1769051783833": {
+        "encrypted": true,
+        "xxteaKey": "j+i3-942/84au_%a",
+        "compressZip": true,
+        "JobSystem": "none",
+        "__version__": "1.0.2"
+      }
+    },
+    "__version__": "1.3.9",
+    "options": {
+      "windows": {
+        "encrypted": false,
+        "xxteaKey": "1es1Aje+lC8L1CzK",
+        "compressZip": false,
+        "JobSystem": "none",
+        "__version__": "1.0.2"
+      },
+      "android": {
+        "encrypted": false,
+        "xxteaKey": "1es1Aje+lC8L1CzK",
+        "compressZip": false,
+        "JobSystem": "none",
+        "__version__": "1.0.2"
+      }
+    }
+  }
+}

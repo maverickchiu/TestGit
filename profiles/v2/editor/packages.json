@@ -1,0 +1,14 @@
+{
+  "disable-packages": {
+    "C:\\Users\\maverickchiu\\": {
+      "CocosCreator\\builtin-extensions\\3": {
+        "8": {
+          "8\\cocos-service": {
+            "name": "cocos-service",
+            "time": 1769497468338
+          }
+        }
+      }
+    }
+  }
+}

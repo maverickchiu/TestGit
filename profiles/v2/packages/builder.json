@@ -1,0 +1,350 @@
+{
+  "__version__": "1.3.9",
+  "log": {
+    "level": 4
+  },
+  "common": {
+    "binGroupConfig": {
+      "threshold": 16,
+      "enable": false
+    },
+    "polyfills": {
+      "asyncFunctions": false
+    },
+    "buildPath": "project://build",
+    "outputName": "windows-dev-001",
+    "mainBundleCompressionType": "merge_dep",
+    "platform": "windows",
+    "name": "Windows-Dev",
+    "debug": true,
+    "sourceMaps": "inline",
+    "skipCompressTexture": true,
+    "md5Cache": true,
+    "useSplashScreen": false,
+    "inlineEnum": false,
+    "server": "",
+    "engineModulesConfigKey": "defaultConfig",
+    "buildMode": "normal",
+    "mangleProperties": false,
+    "overwriteProjectSettings": {
+      "macroConfig": {
+        "cleanupImageCache": "inherit-project-setting"
+      },
+      "includeModules": {
+        "physics": "inherit-project-setting",
+        "physics-2d": "inherit-project-setting",
+        "gfx-webgl2": "off"
+      }
+    },
+    "nativeCodeBundleMode": "wasm",
+    "experimentalEraseModules": false,
+    "startSceneAssetBundle": false,
+    "bundleConfigs": [],
+    "useBuiltinServer": false,
+    "md5CacheOptions": {
+      "excludes": [],
+      "includes": [],
+      "replaceOnly": [],
+      "handleTemplateMd5Link": true
+    },
+    "mainBundleIsRemote": false,
+    "bundleCommonChunk": false,
+    "packAutoAtlas": true,
+    "startScene": "05e9e37a-53ef-4ca4-9b9b-510390459838",
+    "taskName": "windows-dev",
+    "scenes": [
+      {
+        "url": "db://assets/scene.scene",
+        "uuid": "05e9e37a-53ef-4ca4-9b9b-510390459838"
+      }
+    ],
+    "wasmCompressionMode": false
+  },
+  "BuildTaskManager": {
+    "taskMap": {
+      "1769050739004": {
+        "type": "build",
+        "id": "1769050739004",
+        "progress": 1,
+        "state": "success",
+        "stage": "make",
+        "message": "2026-1-22 11:09:44 make package D:\\CocosProjects\\TestGit\\Hello\\build\\windows-dev success!",
+        "detailMessage": "asset-db-hook-engine-extends-afterRefresh (3ms)\r",
+        "options": {
+          "name": "Windows-Dev",
+          "server": "",
+          "engineModulesConfigKey": "defaultConfig",
+          "platform": "windows",
+          "buildPath": "project://build",
+          "debug": true,
+          "buildMode": "normal",
+          "mangleProperties": false,
+          "md5Cache": true,
+          "skipCompressTexture": true,
+          "sourceMaps": "inline",
+          "overwriteProjectSettings": {
+            "macroConfig": {
+              "cleanupImageCache": "inherit-project-setting"
+            },
+            "includeModules": {
+              "physics": "inherit-project-setting",
+              "physics-2d": "inherit-project-setting",
+              "gfx-webgl2": "off"
+            }
+          },
+          "nativeCodeBundleMode": "wasm",
+          "polyfills": {
+            "asyncFunctions": false
+          },
+          "experimentalEraseModules": false,
+          "startSceneAssetBundle": false,
+          "bundleConfigs": [],
+          "inlineEnum": false,
+          "useBuiltinServer": false,
+          "md5CacheOptions": {
+            "excludes": [],
+            "includes": [],
+            "replaceOnly": [],
+            "handleTemplateMd5Link": true
+          },
+          "mainBundleIsRemote": false,
+          "mainBundleCompressionType": "merge_dep",
+          "useSplashScreen": false,
+          "bundleCommonChunk": false,
+          "packAutoAtlas": true,
+          "startScene": "05e9e37a-53ef-4ca4-9b9b-510390459838",
+          "outputName": "windows-dev-001",
+          "taskName": "windows-dev",
+          "scenes": [
+            {
+              "url": "db://assets/scene.scene",
+              "uuid": "05e9e37a-53ef-4ca4-9b9b-510390459838"
+            }
+          ],
+          "wasmCompressionMode": false,
+          "binGroupConfig": {
+            "threshold": 16,
+            "enable": false
+          },
+          "packages": {},
+          "__version__": "1.3.9",
+          "logDest": "project://temp/builder/log/windows2026-1-22 10-58.log"
+        },
+        "time": "2026-1-22 10:58:59",
+        "dirty": false
+      },
+      "1769051216692": {
+        "type": "build",
+        "id": "1769051216692",
+        "progress": 1,
+        "state": "failure",
+        "stage": "build",
+        "message": "The build task was interrupted",
+        "detailMessage": "",
+        "options": {
+          "name": "Windows-Release",
+          "server": "",
+          "engineModulesConfigKey": "defaultConfig",
+          "platform": "windows",
+          "buildPath": "project://build",
+          "debug": false,
+          "buildMode": "normal",
+          "mangleProperties": false,
+          "md5Cache": true,
+          "skipCompressTexture": false,
+          "sourceMaps": true,
+          "overwriteProjectSettings": {
+            "macroConfig": {
+              "cleanupImageCache": "inherit-project-setting"
+            },
+            "includeModules": {
+              "physics": "inherit-project-setting",
+              "physics-2d": "inherit-project-setting",
+              "gfx-webgl2": "off"
+            }
+          },
+          "nativeCodeBundleMode": "wasm",
+          "polyfills": {
+            "asyncFunctions": false
+          },
+          "experimentalEraseModules": false,
+          "startSceneAssetBundle": false,
+          "bundleConfigs": [],
+          "inlineEnum": true,
+          "useBuiltinServer": false,
+          "md5CacheOptions": {
+            "excludes": [],
+            "includes": [],
+            "replaceOnly": [],
+            "handleTemplateMd5Link": true
+          },
+          "mainBundleIsRemote": false,
+          "mainBundleCompressionType": "merge_dep",
+          "useSplashScreen": false,
+          "bundleCommonChunk": false,
+          "packAutoAtlas": true,
+          "startScene": "05e9e37a-53ef-4ca4-9b9b-510390459838",
+          "outputName": "windows-release",
+          "taskName": "windows-release",
+          "scenes": [
+            {
+              "url": "db://assets/scene.scene",
+              "uuid": "05e9e37a-53ef-4ca4-9b9b-510390459838"
+            }
+          ],
+          "wasmCompressionMode": false,
+          "binGroupConfig": {
+            "threshold": 16,
+            "enable": false
+          },
+          "packages": {},
+          "__version__": "1.3.9"
+        },
+        "time": "2026-1-22 11:06:56",
+        "dirty": false
+      },
+      "1769051723722": {
+        "type": "build",
+        "id": "1769051723722",
+        "progress": 1,
+        "state": "success",
+        "stage": "build",
+        "message": "2026-1-27 14:12:51 build success in 8 s!",
+        "detailMessage": "Asset DB is resume!\r",
+        "options": {
+          "name": "android-dev",
+          "server": "",
+          "engineModulesConfigKey": "defaultConfig",
+          "platform": "android",
+          "buildPath": "project://build",
+          "debug": true,
+          "buildMode": "normal",
+          "mangleProperties": false,
+          "md5Cache": true,
+          "skipCompressTexture": true,
+          "sourceMaps": "inline",
+          "overwriteProjectSettings": {
+            "macroConfig": {
+              "cleanupImageCache": "inherit-project-setting"
+            },
+            "includeModules": {
+              "physics": "inherit-project-setting",
+              "physics-2d": "inherit-project-setting",
+              "gfx-webgl2": "off"
+            }
+          },
+          "nativeCodeBundleMode": "wasm",
+          "polyfills": {
+            "asyncFunctions": false
+          },
+          "experimentalEraseModules": false,
+          "startSceneAssetBundle": false,
+          "bundleConfigs": [],
+          "inlineEnum": false,
+          "useBuiltinServer": false,
+          "md5CacheOptions": {
+            "excludes": [],
+            "includes": [],
+            "replaceOnly": [],
+            "handleTemplateMd5Link": true
+          },
+          "mainBundleIsRemote": false,
+          "mainBundleCompressionType": "merge_dep",
+          "useSplashScreen": false,
+          "bundleCommonChunk": false,
+          "packAutoAtlas": true,
+          "startScene": "05e9e37a-53ef-4ca4-9b9b-510390459838",
+          "outputName": "android-dev-001",
+          "taskName": "android-dev",
+          "scenes": [
+            {
+              "url": "db://assets/scene.scene",
+              "uuid": "05e9e37a-53ef-4ca4-9b9b-510390459838"
+            }
+          ],
+          "wasmCompressionMode": false,
+          "binGroupConfig": {
+            "threshold": 16,
+            "enable": false
+          },
+          "packages": {},
+          "__version__": "1.3.9",
+          "logDest": "project://temp/builder/log/android2026-1-22 11-15.log"
+        },
+        "time": "2026-1-27 14:12:43",
+        "dirty": false
+      },
+      "1769051783833": {
+        "type": "build",
+        "id": "1769051783833",
+        "progress": 1,
+        "state": "success",
+        "stage": "build",
+        "message": "2026-1-22 11:17:16 build success in 53 s!",
+        "detailMessage": "Asset DB is resume!\r",
+        "options": {
+          "name": "android-release",
+          "server": "",
+          "engineModulesConfigKey": "defaultConfig",
+          "platform": "android",
+          "buildPath": "project://build",
+          "debug": false,
+          "buildMode": "normal",
+          "mangleProperties": false,
+          "md5Cache": true,
+          "skipCompressTexture": false,
+          "sourceMaps": true,
+          "overwriteProjectSettings": {
+            "macroConfig": {
+              "cleanupImageCache": "inherit-project-setting"
+            },
+            "includeModules": {
+              "physics": "inherit-project-setting",
+              "physics-2d": "inherit-project-setting",
+              "gfx-webgl2": "off"
+            }
+          },
+          "nativeCodeBundleMode": "wasm",
+          "polyfills": {
+            "asyncFunctions": false
+          },
+          "experimentalEraseModules": false,
+          "startSceneAssetBundle": false,
+          "bundleConfigs": [],
+          "inlineEnum": true,
+          "useBuiltinServer": false,
+          "md5CacheOptions": {
+            "excludes": [],
+            "includes": [],
+            "replaceOnly": [],
+            "handleTemplateMd5Link": true
+          },
+          "mainBundleIsRemote": false,
+          "mainBundleCompressionType": "merge_dep",
+          "useSplashScreen": false,
+          "bundleCommonChunk": false,
+          "packAutoAtlas": true,
+          "startScene": "05e9e37a-53ef-4ca4-9b9b-510390459838",
+          "outputName": "android-release-001",
+          "taskName": "android-release",
+          "scenes": [
+            {
+              "url": "db://assets/scene.scene",
+              "uuid": "05e9e37a-53ef-4ca4-9b9b-510390459838"
+            }
+          ],
+          "wasmCompressionMode": false,
+          "binGroupConfig": {
+            "threshold": 16,
+            "enable": true
+          },
+          "packages": {},
+          "__version__": "1.3.9",
+          "logDest": "project://temp/builder/log/android2026-1-22 11-16.log"
+        },
+        "time": "2026-1-22 11:16:23",
+        "dirty": false
+      }
+    }
+  }
+}

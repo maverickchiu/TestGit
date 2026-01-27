@@ -1,0 +1,28 @@
+{
+  "__version__": "1.0.0",
+  "builder": {
+    "options": {
+      "android": {
+        "bundleVersion": 123,
+        "remoteAddress": "https://maverickchiu.github.io/TestGit",
+        "environment": "development",
+        "buildCode": ""
+      }
+    },
+    "taskOptionsMap": {
+      "1769051723722": {
+        "bundleVersion": 123,
+        "remoteAddress": "https://maverickchiu.github.io/TestGit",
+        "environment": "development",
+        "versionName": "1.2.12",
+        "buildCode": 0
+      },
+      "1769051723722}": {
+        "bundleVersion": 123,
+        "remoteAddress": "https://maverickchiu.github.io/TestGit",
+        "environment": "development"
+      }
+    },
+    "__version__": "1.3.9"
+  }
+}
