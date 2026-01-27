@@ -15,8 +15,7 @@ export class main extends Component {
 
     async start() {
         const config: IPatchConfig = {
-            baseUrl: "https://maverickchiu.github.io/TestGit/windows-dev/",
-            versionName: "version_development_1.2.12.json",
+            baseUrl: "https://maverickchiu.github.io/TestGit/windows-test-1.66.2/",
             onProgress: (completedCount, totalCount) => {
                 this.progressBar.progress = completedCount / totalCount;
             },
