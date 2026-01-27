@@ -7,9 +7,11 @@ def prepare_remote():
     project_path = os.getenv("GITHUB_WORKSPACE")
     platform = os.getenv("PLATFORM", "android")
     dev_mode = os.getenv("DEV_MODE", "true").lower() == "true"
+    environment = os.getenv("ENVIRONMENT", "development")
+    version_name = os.getenv("VERSION_NAME", "1.2.12")
 
     mode = "dev" if dev_mode else "release"
-    folder_name = f"{platform}-{mode}"
+    folder_name = f"{platform}-{environment}-{version_name}"
     # Cocos 預設 remote 產出路徑
     remote_src = os.path.join(project_path, "build", folder_name, "data", "remote")
     # 準備發布到 GitHub Pages 的暫存目錄

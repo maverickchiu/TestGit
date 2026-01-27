@@ -58,6 +58,8 @@ runs:
         PYTHONUTF8: "1"
         PLATFORM: ${{ inputs.platform }}
         DEV_MODE: ${{ inputs.dev_mode }}
+        ENVIRONMENT: ${{ inputs.environment }}
+        VERSION_NAME: ${{ inputs.version_name }}
       run: |
         import subprocess, os
         script_path = os.path.join(os.environ['GITHUB_WORKSPACE'], '.github', 'tools', 'prepare-remote.py')

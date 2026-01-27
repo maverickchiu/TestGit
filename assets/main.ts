@@ -1,5 +1,7 @@
-import { _decorator, assetManager, Component, Node, Sprite, SpriteFrame } from 'cc';
+import { _decorator, assetManager, Component, Node, ProgressBar, Sprite, SpriteFrame } from 'cc';
 import { WINDOWS } from 'cc/env';
+import { PatchManager } from 'db://patch-version-builder/PatchManager';
+import { IPatchConfig } from 'db://patch-version-builder/Type';
 const { ccclass, property } = _decorator;
 
 @ccclass('main')
@@ -8,14 +10,22 @@ export class main extends Component {
     sprite: Sprite = null;
     @property(Sprite)
     sprite2: Sprite = null;
+    @property(ProgressBar)
+    progressBar: ProgressBar = null;
 
-    start() {
-        const baseUrl = "https://maverickchiu.github.io/TestGit/";
-        const platformPath = WINDOWS ? "windows-dev/" : "android-dev/";
-        const bundleName = "girls";
-        const bundleUrl = `${baseUrl}${platformPath}${bundleName}`;
+    async start() {
+        const config: IPatchConfig = {
+            baseUrl: "https://maverickchiu.github.io/TestGit/windows-dev/",
+            versionName: "version_development_1.2.12.json",
+            onProgress: (completedCount, totalCount) => {
+                this.progressBar.progress = completedCount / totalCount;
+            },
+        };
+        const patchManager = new PatchManager();
+        const result = await patchManager.patch(config);
+        console.log(result);
 
-        assetManager.loadBundle(bundleUrl, { version: '3b90a' }, (err, bundle) => {
+        assetManager.loadBundle("girls", (err, bundle) => {
             if (err) {
                 return;
             }
