@@ -1,0 +1,104 @@
+{
+    "importBase": "import",
+    "nativeBase": "native",
+    "name": "girls",
+    "deps": [],
+    "uuids": [
+        "0173af53c",
+        "6c340a10-4344-41ab-bba4-0408488e24e2",
+        "6c340a10-4344-41ab-bba4-0408488e24e2@6c48a",
+        "6c340a10-4344-41ab-bba4-0408488e24e2@f9941",
+        "7e4fb4b8-2f78-460d-99ce-7c713754e6d3",
+        "7e4fb4b8-2f78-460d-99ce-7c713754e6d3@6c48a",
+        "7e4fb4b8-2f78-460d-99ce-7c713754e6d3@f9941",
+        "c859cf9b-ff30-4abb-ab32-663653d10585",
+        "c859cf9b-ff30-4abb-ab32-663653d10585@6c48a",
+        "c859cf9b-ff30-4abb-ab32-663653d10585@f9941"
+    ],
+    "paths": {
+        "c859cf9b-ff30-4abb-ab32-663653d10585": [
+            "000",
+            "cc.ImageAsset",
+            1
+        ],
+        "c859cf9b-ff30-4abb-ab32-663653d10585@6c48a": [
+            "000/texture",
+            "cc.Texture2D",
+            1
+        ],
+        "c859cf9b-ff30-4abb-ab32-663653d10585@f9941": [
+            "000/spriteFrame",
+            "cc.SpriteFrame",
+            1
+        ],
+        "6c340a10-4344-41ab-bba4-0408488e24e2": [
+            "001",
+            "cc.ImageAsset",
+            1
+        ],
+        "6c340a10-4344-41ab-bba4-0408488e24e2@6c48a": [
+            "001/texture",
+            "cc.Texture2D",
+            1
+        ],
+        "6c340a10-4344-41ab-bba4-0408488e24e2@f9941": [
+            "001/spriteFrame",
+            "cc.SpriteFrame",
+            1
+        ],
+        "7e4fb4b8-2f78-460d-99ce-7c713754e6d3": [
+            "003",
+            "cc.ImageAsset",
+            1
+        ],
+        "7e4fb4b8-2f78-460d-99ce-7c713754e6d3@6c48a": [
+            "003/texture",
+            "cc.Texture2D",
+            1
+        ],
+        "7e4fb4b8-2f78-460d-99ce-7c713754e6d3@f9941": [
+            "003/spriteFrame",
+            "cc.SpriteFrame",
+            1
+        ]
+    },
+    "scenes": {},
+    "packs": {
+        "0173af53c": [
+            "6c340a10-4344-41ab-bba4-0408488e24e2@6c48a",
+            "7e4fb4b8-2f78-460d-99ce-7c713754e6d3@6c48a",
+            "c859cf9b-ff30-4abb-ab32-663653d10585@6c48a"
+        ]
+    },
+    "versions": {
+        "import": [
+            "0173af53c",
+            "7d0cd",
+            "6c340a10-4344-41ab-bba4-0408488e24e2",
+            "c16a8",
+            "6c340a10-4344-41ab-bba4-0408488e24e2@f9941",
+            "d83da",
+            "7e4fb4b8-2f78-460d-99ce-7c713754e6d3",
+            "c16a8",
+            "7e4fb4b8-2f78-460d-99ce-7c713754e6d3@f9941",
+            "65690",
+            "c859cf9b-ff30-4abb-ab32-663653d10585",
+            "c16a8",
+            "c859cf9b-ff30-4abb-ab32-663653d10585@f9941",
+            "0d5a7"
+        ],
+        "native": [
+            "6c340a10-4344-41ab-bba4-0408488e24e2",
+            "1bf5e",
+            "7e4fb4b8-2f78-460d-99ce-7c713754e6d3",
+            "9f04d",
+            "c859cf9b-ff30-4abb-ab32-663653d10585",
+            "c88d2"
+        ]
+    },
+    "redirect": [],
+    "debug": true,
+    "extensionMap": {},
+    "hasPreloadScript": true,
+    "dependencyRelationships": {}
+}
