@@ -1,0 +1,59 @@
+{
+  "version": "16",
+  "bundleInfos": [
+    {
+      "name": "girls",
+      "version": "13f9c",
+      "items": [
+        {
+          "relative": "cc.config.13f9c.json",
+          "md5": "1f5248dba1c0d1bff9ad4a331d6ce984"
+        },
+        {
+          "relative": "import/01/0173af53c.7d0cd.json",
+          "md5": "7d0cdf13470e874debe0ccc1c2a5f64c"
+        },
+        {
+          "relative": "import/6c/6c340a10-4344-41ab-bba4-0408488e24e2.c16a8.json",
+          "md5": "c16a8f853c64bf39777846c27bfac37d"
+        },
+        {
+          "relative": "import/6c/6c340a10-4344-41ab-bba4-0408488e24e2@f9941.4b5a0.json",
+          "md5": "4b5a056fefb06daf96bf499605266baf"
+        },
+        {
+          "relative": "import/7e/7e4fb4b8-2f78-460d-99ce-7c713754e6d3.c16a8.json",
+          "md5": "c16a8f853c64bf39777846c27bfac37d"
+        },
+        {
+          "relative": "import/7e/7e4fb4b8-2f78-460d-99ce-7c713754e6d3@f9941.e3df7.json",
+          "md5": "e3df777270609159b33de9e07ce21d1f"
+        },
+        {
+          "relative": "import/c8/c859cf9b-ff30-4abb-ab32-663653d10585.c16a8.json",
+          "md5": "c16a8f853c64bf39777846c27bfac37d"
+        },
+        {
+          "relative": "import/c8/c859cf9b-ff30-4abb-ab32-663653d10585@f9941.0d5a7.json",
+          "md5": "0d5a7e39dbb660c9930b4a9bc4652d1b"
+        },
+        {
+          "relative": "index.13f9c.js",
+          "md5": "b6f37baaf89e8925f1e56b67f1ff1754"
+        },
+        {
+          "relative": "native/6c/6c340a10-4344-41ab-bba4-0408488e24e2.1bf5e.jpg",
+          "md5": "1bf5e935deef9418ada1e9a05bf9494d"
+        },
+        {
+          "relative": "native/7e/7e4fb4b8-2f78-460d-99ce-7c713754e6d3.9f04d.jpg",
+          "md5": "9f04d7b479f68bc0de578e892b49ccb7"
+        },
+        {
+          "relative": "native/c8/c859cf9b-ff30-4abb-ab32-663653d10585.c88d2.jpg",
+          "md5": "c88d212f9a28321b15bdda8ba95d50fd"
+        }
+      ]
+    }
+  ]
+}
