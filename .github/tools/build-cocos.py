@@ -17,7 +17,7 @@ def run_cocos_stage(cocos_path, project_path, stage, config_path, startup_info, 
     print(f"🎬 Running Cocos Stage: {stage}...", flush=True)
     
     # 核心修正：將 stage 放入 params，並加上 verbosity 讓 Log 稍微清楚一點
-    params = f"configPath={config_path};stage={stage};force=true;verbosity=minimal;packages='{package_options}'"
+    params = f"configPath={config_path};stage={stage};force=true;verbosity=minimal;packages={package_options}"
     
     cmd = [
         cocos_path,
