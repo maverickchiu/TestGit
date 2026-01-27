@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os, subprocess, sys
 import time
+import json
 
 def get_startup_info():
     """在 Windows 環境下隱藏彈出的 GUI 視窗"""
@@ -11,12 +12,12 @@ def get_startup_info():
         return info
     return None
 
-def run_cocos_stage(cocos_path, project_path, stage, config_path, startup_info):
+def run_cocos_stage(cocos_path, project_path, stage, config_path, startup_info, package_options):
     """執行 Cocos 指定階段的構建任務"""
     print(f"🎬 Running Cocos Stage: {stage}...", flush=True)
     
     # 核心修正：將 stage 放入 params，並加上 verbosity 讓 Log 稍微清楚一點
-    params = f"configPath={config_path};stage={stage};force=true;verbosity=minimal"
+    params = f"configPath={config_path};stage={stage};force=true;verbosity=minimal;packages={package_options}"
     
     cmd = [
         cocos_path,
@@ -24,6 +25,7 @@ def run_cocos_stage(cocos_path, project_path, stage, config_path, startup_info):
         "--project", project_path,
         "--build", params,
     ]
+    print(f"執行命令: {' '.join(cmd)}") # Debug 用，看看最後組出來長怎樣
     
     result = subprocess.run(
         cmd, 
@@ -55,10 +57,19 @@ def main():
 
     startup_info = get_startup_info()
 
+    options = {
+        "patch-version-builder": {
+            "versionName": version_name,  # 自動處理字串引號
+            "buildCode": build_code,      # 自動處理數字
+            "environment": environment,   
+        }
+    }
+    package_options = json.dumps(options, separators=(',', ':'))
+
     # --- Step 1: Build Stage (產生原生工程) ---
     print("🛠 Step 1: Generating Native Project...")
     # 明確指定只跑 build 階段
-    exit_code = run_cocos_stage(cocos_path, project_path, "build", config_path, startup_info)
+    exit_code = run_cocos_stage(cocos_path, project_path, "build", config_path, startup_info, package_options)
     
     if exit_code not in [0, 36]:
         print(f"❌ Build stage failed with exit code: {exit_code}")
