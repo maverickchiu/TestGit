@@ -68,6 +68,14 @@ jobs:
           auto_compile: true
           version_name: ${{ inputs.version_name }}
 
+      - name: Upload Bundle
+        uses: ./.github/actions/upload-bundles
+        with:
+          environment: ${{ inputs.environment }}
+          platform: ${{ inputs.platform }}
+          dev_mode: true
+          version_name: ${{ inputs.version_name }}
+
       - name: Upload Release
         uses: ./.github/actions/upload-release
         with:
