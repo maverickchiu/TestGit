@@ -20,7 +20,7 @@ interface VersionBundleInfo {
 }
 
 interface VersionInfo {
-    version: number;
+    buildCode: number;
     bundleInfos: VersionBundleInfo[];
 }
 
@@ -195,7 +195,7 @@ export const onAfterBuild: BuildHook.onAfterBuild = async function (options: ITa
     bundleInfos.push(...unorderedItems);
     
     const versionInfo: VersionInfo = {
-        version: packageOptions.buildCode,
+        buildCode: packageOptions.buildCode,
         bundleInfos: bundleInfos,
     };
     
@@ -207,7 +207,8 @@ export const onAfterBuild: BuildHook.onAfterBuild = async function (options: ITa
         log(`  - ${bundleInfo.name}: ${bundleInfo.items.length} 個資源`);
     }
     
-    const fileName = `version_${packageOptions.environment}_${packageOptions.versionName}.json`;
+    // const fileName = `version_${packageOptions.environment}_${packageOptions.versionName}.json`;
+    const fileName = 'version.json';
     const versionFile = path.join(result.paths.dir, 'remote', fileName);
 
     const dir = path.dirname(versionFile);

@@ -56,7 +56,7 @@ export class PatchManager {
 
     async patch(config: IPatchConfig): Promise<IPatchResult> {
         const baseUrl = config.baseUrl;
-        const versionInfo = await this.versionFetcher.fetchVersionInfo(baseUrl);
+        const versionInfo = await this.versionFetcher.fetchVersionInfo(baseUrl, config.versionName);
         if (!sys.isNative) {
             console.log('[Patch] 非 native 環境，不進行下載');
             this.addBundleRoutes(baseUrl, versionInfo.bundleInfos);

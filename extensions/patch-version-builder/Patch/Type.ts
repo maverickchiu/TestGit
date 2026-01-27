@@ -4,6 +4,7 @@ export interface IPatchConfig {
     // 'http://192.168.165.43:8081/' OK
     // 'http://192.168.165.43:8081/version.json' NG
     baseUrl: string;
+    versionName?: string;
     onProgress?: ProgressCallback;
 }
 
@@ -37,7 +38,7 @@ export interface IRequestItem {
 export const CONCURRENT_COUNT = 12;
 
 export interface IVersionFetcher {
-    fetchVersionInfo(baseUrl: string): Promise<IVersionInfo>;
+    fetchVersionInfo(baseUrl: string, versionName?: string): Promise<IVersionInfo>;
 }
 
 export enum BundleState {

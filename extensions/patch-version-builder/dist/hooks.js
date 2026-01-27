@@ -148,7 +148,7 @@ const onAfterBuild = async function (options, result) {
     unorderedItems.sort((a, b) => a.name.localeCompare(b.name));
     bundleInfos.push(...unorderedItems);
     const versionInfo = {
-        version: packageOptions.buildCode,
+        buildCode: packageOptions.buildCode,
         bundleInfos: bundleInfos,
     };
     log('版本資訊: ', JSON.stringify(versionInfo, null, 2));
@@ -157,7 +157,8 @@ const onAfterBuild = async function (options, result) {
     for (const bundleInfo of bundleInfos) {
         log(`  - ${bundleInfo.name}: ${bundleInfo.items.length} 個資源`);
     }
-    const fileName = `version_${packageOptions.environment}_${packageOptions.versionName}.json`;
+    // const fileName = `version_${packageOptions.environment}_${packageOptions.versionName}.json`;
+    const fileName = 'version.json';
     const versionFile = path_1.default.join(result.paths.dir, 'remote', fileName);
     const dir = path_1.default.dirname(versionFile);
     if (!fs_1.default.existsSync(dir)) {
