@@ -2,16 +2,12 @@ name: 外部資源更新
 
 on:
   workflow_dispatch:
-    # inputs:
-    #   platform:
-    #     description: '平台'
-    #     required: true
-    #     default: 'windows'
-    #     type: choice
-    #     options:
-    #       - windows
-    #       - android
-    #       - ios
+    inputs:
+      version_name:
+        description: '版本名稱'
+        required: true
+        default: '1.2.12'
+        type: string
 
 jobs:
   build_windows:
@@ -37,6 +33,7 @@ jobs:
           platform: windows
           dev_mode: false
           auto_compile: false
+          version_name: ${{ inputs.version_name }}
 
   build_android:
     runs-on: [self-hosted]
@@ -61,6 +58,7 @@ jobs:
           platform: android
           dev_mode: false
           auto_compile: false
+          version_name: ${{ inputs.version_name }}
 
   build_ios:
     runs-on: [self-hosted]
@@ -85,3 +83,4 @@ jobs:
           platform: ios
           dev_mode: false
           auto_compile: false
+          version_name: ${{ inputs.version_name }}

@@ -50,6 +50,7 @@ runs:
         platform: ${{ inputs.platform }}
         dev_mode: ${{ inputs.dev_mode }}
         auto_compile: false
+        version_name: ${{ inputs.version_name }}
 
     - name: Prepare Remote Assets for Pages
       shell: python
