@@ -69,16 +69,31 @@ def main():
         print(f"❌ Failed to move file: {e}")
         sys.exit(1)
 
-    # --- 8. 寫入 GitHub Output 與 Env ---
+    # --- 8. 生成符合 Git tag 規範的 tag_name ---
+    # Git tag 不能包含括號、空格等特殊字符，需要清理
+    # 將 d1.2.12(20)_260127.zip -> d1.2.12-20-260127
+    tag_name = final_name.replace(ext, "")  # 去掉擴展名
+    tag_name = tag_name.replace("(", "-")    # 將 ( 替換為 -
+    tag_name = tag_name.replace(")", "-")    # 將 ) 替換為 -
+    tag_name = tag_name.replace("_", "-")    # 將 _ 替換為 -
+    # 清理多個連續的連字符
+    while "--" in tag_name:
+        tag_name = tag_name.replace("--", "-")
+    # 去掉開頭和結尾的連字符
+    tag_name = tag_name.strip("-")
+    
+    # --- 9. 寫入 GitHub Output 與 Env ---
     if "GITHUB_OUTPUT" in os.environ:
         with open(os.environ["GITHUB_OUTPUT"], "a") as f:
             f.write(f"artifact_path={final_path}\n")
             f.write(f"artifact_name={final_name}\n")
+            f.write(f"tag_name={tag_name}\n")
             
     if "GITHUB_ENV" in os.environ:
         with open(os.environ["GITHUB_ENV"], "a") as f:
             f.write(f"ARTIFACT_PATH={final_path}\n")
             f.write(f"ARTIFACT_NAME={final_name}\n")
+            f.write(f"TAG_NAME={tag_name}\n")
 
 if __name__ == "__main__":
     main()
