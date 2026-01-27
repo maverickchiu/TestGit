@@ -40,6 +40,8 @@ def main():
     cocos_path = os.getenv("COCOS_PATH")
     project_path = os.getenv("GITHUB_WORKSPACE", os.getcwd()) # 增加預設值
     platform = os.getenv("PLATFORM")
+    version_name = os.getenv("VERSION_NAME")
+    build_code = os.getenv("BUILD_CODE")
     dev_mode = os.getenv("DEV_MODE", "true").lower() == "true"
     auto_compile = os.getenv("AUTO_COMPILE", "false").lower() == "true"
     environment = os.getenv("ENVIRONMENT")

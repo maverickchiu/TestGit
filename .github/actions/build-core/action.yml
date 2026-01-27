@@ -113,6 +113,7 @@ runs:
         AUTO_COMPILE: ${{ inputs.auto_compile }}
         ENVIRONMENT: ${{ inputs.environment }}
         VERSION_NAME: ${{ inputs.version_name }}
+        BUILD_CODE: ${{ github.run_number }}
       run: |
         import subprocess, os, sys
         script_path = os.path.join(os.environ['GITHUB_WORKSPACE'], '.github', 'tools', 'build-cocos.py')
