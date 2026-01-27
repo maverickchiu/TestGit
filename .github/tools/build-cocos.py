@@ -85,7 +85,7 @@ def main():
 
         print("🚀 Step 2: Compiling Executable (Make Stage)...")
         # 修正：改用 --build 搭配 stage=make，而非原本的 --make
-        exit_code_make = run_cocos_stage(cocos_path, project_path, "make", config_path, startup_info)
+        exit_code_make = run_cocos_stage(cocos_path, project_path, "make", config_path, startup_info, package_options)
         
         if exit_code_make not in [0, 36]:
             print(f"❌ Make stage failed with exit code: {exit_code_make}")
