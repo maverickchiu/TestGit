@@ -1,0 +1,111 @@
+{
+  "buildCode": "23",
+  "bundleInfos": [
+    {
+      "name": "girls",
+      "version": "6014f",
+      "items": [
+        {
+          "relative": "cc.config.6014f.json",
+          "md5": "717abd013408853ece695f2ca0510fcd"
+        },
+        {
+          "relative": "import/0f/0f1fcecae.979cc.json",
+          "md5": "979cce068545fa3e250ef9c63f8cdfcd"
+        },
+        {
+          "relative": "import/32/32f3e168-2cf7-43fe-820e-33f8a1898bb9.a2533.json",
+          "md5": "a253314ec7107d95345d7fc89b8d7bb5"
+        },
+        {
+          "relative": "import/32/32f3e168-2cf7-43fe-820e-33f8a1898bb9@f9941.74f59.json",
+          "md5": "74f5941d5eca56ef3b9bb51a3f18d54c"
+        },
+        {
+          "relative": "import/58/58865f4f-9a1a-4cfc-82a5-c492bb01e453.c16a8.json",
+          "md5": "c16a8f853c64bf39777846c27bfac37d"
+        },
+        {
+          "relative": "import/58/58865f4f-9a1a-4cfc-82a5-c492bb01e453@f9941.5828f.json",
+          "md5": "5828fbd21d373d8aa4fe837077cd9389"
+        },
+        {
+          "relative": "import/6c/6c340a10-4344-41ab-bba4-0408488e24e2.c16a8.json",
+          "md5": "c16a8f853c64bf39777846c27bfac37d"
+        },
+        {
+          "relative": "import/6c/6c340a10-4344-41ab-bba4-0408488e24e2@f9941.4b5a0.json",
+          "md5": "4b5a056fefb06daf96bf499605266baf"
+        },
+        {
+          "relative": "import/7e/7e4fb4b8-2f78-460d-99ce-7c713754e6d3.c16a8.json",
+          "md5": "c16a8f853c64bf39777846c27bfac37d"
+        },
+        {
+          "relative": "import/7e/7e4fb4b8-2f78-460d-99ce-7c713754e6d3@f9941.e3df7.json",
+          "md5": "e3df777270609159b33de9e07ce21d1f"
+        },
+        {
+          "relative": "import/97/97662679-e5c2-4fcf-a237-2c2bf97ee651.c16a8.json",
+          "md5": "c16a8f853c64bf39777846c27bfac37d"
+        },
+        {
+          "relative": "import/97/97662679-e5c2-4fcf-a237-2c2bf97ee651@f9941.fd72d.json",
+          "md5": "fd72dc688afe24a0cccb352c9ebae1c9"
+        },
+        {
+          "relative": "import/af/afd9253c-9219-4c49-b04b-44323980f73a.c16a8.json",
+          "md5": "c16a8f853c64bf39777846c27bfac37d"
+        },
+        {
+          "relative": "import/af/afd9253c-9219-4c49-b04b-44323980f73a@f9941.76a7c.json",
+          "md5": "76a7c10c2d483d6e462f344e2e1e5de8"
+        },
+        {
+          "relative": "import/c8/c859cf9b-ff30-4abb-ab32-663653d10585.c16a8.json",
+          "md5": "c16a8f853c64bf39777846c27bfac37d"
+        },
+        {
+          "relative": "import/c8/c859cf9b-ff30-4abb-ab32-663653d10585@f9941.0d5a7.json",
+          "md5": "0d5a7e39dbb660c9930b4a9bc4652d1b"
+        },
+        {
+          "relative": "import/d3/d37727d1-c5ed-466a-9c31-370042167d28.02116.json",
+          "md5": "02116e3617c1fc75df159c0cb19f4ff7"
+        },
+        {
+          "relative": "index.6014f.js",
+          "md5": "603f70f64cde552ce0eecaffa9170d08"
+        },
+        {
+          "relative": "native/32/32f3e168-2cf7-43fe-820e-33f8a1898bb9.05878.png",
+          "md5": "058780eadf02061f8dff464ccdb9862a"
+        },
+        {
+          "relative": "native/58/58865f4f-9a1a-4cfc-82a5-c492bb01e453.114e2.jpg",
+          "md5": "114e2b08ecce964de6ca7e0529ec1677"
+        },
+        {
+          "relative": "native/6c/6c340a10-4344-41ab-bba4-0408488e24e2.1bf5e.jpg",
+          "md5": "1bf5e935deef9418ada1e9a05bf9494d"
+        },
+        {
+          "relative": "native/7e/7e4fb4b8-2f78-460d-99ce-7c713754e6d3.9f04d.jpg",
+          "md5": "9f04d7b479f68bc0de578e892b49ccb7"
+        },
+        {
+          "relative": "native/97/97662679-e5c2-4fcf-a237-2c2bf97ee651.8322b.jpg",
+          "md5": "8322b02105a839fc80cc5dad05ae6fea"
+        },
+        {
+          "relative": "native/af/afd9253c-9219-4c49-b04b-44323980f73a.d8371.jpg",
+          "md5": "d83714cb127b4b58cf59771ed0e1beb1"
+        },
+        {
+          "relative": "native/c8/c859cf9b-ff30-4abb-ab32-663653d10585.c88d2.jpg",
+          "md5": "c88d212f9a28321b15bdda8ba95d50fd"
+        }
+      ]
+    }
+  ]
+}
