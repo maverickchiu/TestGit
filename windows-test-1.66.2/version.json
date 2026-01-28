@@ -1,13 +1,13 @@
 {
-  "buildCode": "21",
+  "buildCode": "24",
   "bundleInfos": [
     {
       "name": "girls",
-      "version": "f8cbf",
+      "version": "6014f",
       "items": [
         {
-          "relative": "cc.config.f8cbf.json",
-          "md5": "259a944dd8c321641087c93d9898a798"
+          "relative": "cc.config.6014f.json",
+          "md5": "717abd013408853ece695f2ca0510fcd"
         },
         {
           "relative": "import/0f/0f1fcecae.979cc.json",
@@ -18,16 +18,16 @@
           "md5": "a253314ec7107d95345d7fc89b8d7bb5"
         },
         {
-          "relative": "import/32/32f3e168-2cf7-43fe-820e-33f8a1898bb9@f9941.a99e3.json",
-          "md5": "a99e3b39bf08e30516199f5a0421743b"
+          "relative": "import/32/32f3e168-2cf7-43fe-820e-33f8a1898bb9@f9941.74f59.json",
+          "md5": "74f5941d5eca56ef3b9bb51a3f18d54c"
         },
         {
           "relative": "import/58/58865f4f-9a1a-4cfc-82a5-c492bb01e453.c16a8.json",
           "md5": "c16a8f853c64bf39777846c27bfac37d"
         },
         {
-          "relative": "import/58/58865f4f-9a1a-4cfc-82a5-c492bb01e453@f9941.e9000.json",
-          "md5": "e9000aff5fe5137595d256968786957f"
+          "relative": "import/58/58865f4f-9a1a-4cfc-82a5-c492bb01e453@f9941.5828f.json",
+          "md5": "5828fbd21d373d8aa4fe837077cd9389"
         },
         {
           "relative": "import/6c/6c340a10-4344-41ab-bba4-0408488e24e2.c16a8.json",
@@ -42,8 +42,8 @@
           "md5": "c16a8f853c64bf39777846c27bfac37d"
         },
         {
-          "relative": "import/7e/7e4fb4b8-2f78-460d-99ce-7c713754e6d3@f9941.65690.json",
-          "md5": "656906b4c06c63d21ccbd5c5f164e122"
+          "relative": "import/7e/7e4fb4b8-2f78-460d-99ce-7c713754e6d3@f9941.e3df7.json",
+          "md5": "e3df777270609159b33de9e07ce21d1f"
         },
         {
           "relative": "import/97/97662679-e5c2-4fcf-a237-2c2bf97ee651.c16a8.json",
@@ -66,15 +66,15 @@
           "md5": "c16a8f853c64bf39777846c27bfac37d"
         },
         {
-          "relative": "import/c8/c859cf9b-ff30-4abb-ab32-663653d10585@f9941.dc150.json",
-          "md5": "dc1509340887abc5aae62e3f795b637b"
+          "relative": "import/c8/c859cf9b-ff30-4abb-ab32-663653d10585@f9941.0d5a7.json",
+          "md5": "0d5a7e39dbb660c9930b4a9bc4652d1b"
         },
         {
           "relative": "import/d3/d37727d1-c5ed-466a-9c31-370042167d28.02116.json",
           "md5": "02116e3617c1fc75df159c0cb19f4ff7"
         },
         {
-          "relative": "index.f8cbf.js",
+          "relative": "index.6014f.js",
           "md5": "603f70f64cde552ce0eecaffa9170d08"
         },
         {
