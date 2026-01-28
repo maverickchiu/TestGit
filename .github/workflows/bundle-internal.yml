@@ -1,5 +1,7 @@
 name: 內部資源更新
 
+run-name: 🚀 [${{ inputs.environment }}] 版本:${{ inputs.version_name }} 由 @${{ github.actor }} 觸發
+
 on:
   workflow_dispatch:
     inputs:
