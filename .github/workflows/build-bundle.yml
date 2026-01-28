@@ -1,4 +1,4 @@
-name: 內部資源更新
+name: 資源打包工具
 
 on:
   workflow_call:
@@ -42,11 +42,6 @@ on:
       final_build_number:
         description: "這次打包使用的序號"
         value: ${{ jobs.write_build_number.outputs.out_num }}
-
-# 防止多個打包任務同時在同一個 Runner 上打架
-concurrency:
-  group: cocos-bundle-update-${{ github.ref }}
-  cancel-in-progress: false
 
 jobs:
   write_build_number:
