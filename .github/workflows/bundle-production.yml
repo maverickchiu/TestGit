@@ -7,80 +7,23 @@ on:
         description: '版本名稱'
         required: true
         default: '1.2.12'
-        type: string
+        type: string # 外部更新通常手動輸入，保留 string 類型
+
+# 同樣建議加上併發控制，避免外部與內部更新同時在 Runner 上打架
+concurrency:
+  group: cocos-bundle-update-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
-  build_windows:
-    runs-on: [self-hosted]
-
-    steps:
-      - name: check out
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          lfs: true
-          clean: false
-
-      - name: Install Packages
-        uses: ./.github/actions/install-packages
-
-      - name: Build Bundle(Windows)
-        uses: ./.github/actions/build-core
-        with:
-          git_token: ${{ github.token }} 
-          force_clean: false
-          environment: 'production'
-          platform: windows
-          dev_mode: false
-          auto_compile: false
-          version_name: ${{ inputs.version_name }}
-
-  build_android:
-    runs-on: [self-hosted]
-
-    steps:
-      - name: check out
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          lfs: true
-          clean: false
-
-      - name: Install Packages
-        uses: ./.github/actions/install-packages
-
-      - name: Build Bundle(Android)
-        uses: ./.github/actions/build-core
-        with:
-          git_token: ${{ github.token }} 
-          force_clean: false
-          environment: 'production'
-          platform: android
-          dev_mode: false
-          auto_compile: false
-          version_name: ${{ inputs.version_name }}
-
-  build_ios:
-    runs-on: [self-hosted]
-
-    steps:
-      - name: check out
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          lfs: true
-          clean: false
-
-      - name: Install Packages
-        uses: ./.github/actions/install-packages
-
-      - name: Build Bundle(iOS)
-        uses: ./.github/actions/build-core
-        with:
-          git_token: ${{ github.token }} 
-          force_clean: false
-          environment: 'production'
-          platform: ios
-          dev_mode: false
-          auto_compile: false
-          version_name: ${{ inputs.version_name }}
+  # 直接接力給核心打包程式
+  call_core_build:
+    uses: ./.github/workflows/build_bundle.yml
+    with:
+      environment: 'production'      # 外部更新固定為 production
+      version_name: ${{ inputs.version_name }}
+      build_windows: true           # 外部更新通常三平台全出
+      build_android: true
+      build_ios: true
+      dev_mode: false               # 外部更新關閉開發者模式
+      auto_compile: false           # 僅更新資源，不產出執行檔
+    secrets: inherit # 如果 build_bundle.yml 內需要用到 Repo 的 Secrets (例如 PAT)

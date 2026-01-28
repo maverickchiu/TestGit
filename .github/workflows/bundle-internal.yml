@@ -48,82 +48,22 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  summary_inputs:
-    runs-on: [self-hosted] # 必須指定 runner
-    steps:
-      - name: Checkout for Summary Action
-        uses: actions/checkout@v4 # 必須先 checkout 才能使用本地的 summary-inputs action
-      
-      - name: Summary Inputs
-        uses: ./.github/actions/summary-inputs
-        with:
-          all_inputs: ${{ toJSON(inputs) }}
+  # 💡 現在這個入口 Job 只需要「呼叫」副程式
+  call_build_bundle:
+    uses: ./.github/workflows/build_bundle.yml # 指向你的副程式檔案
+    with:
+      environment: ${{ inputs.environment }}
+      version_name: ${{ inputs.version_name }}
+      build_windows: ${{ inputs.build_windows }}
+      build_android: ${{ inputs.build_android }}
+      build_ios: ${{ inputs.build_ios }}
+      dev_mode: true        # 這裡可以寫死或也改成 input
+      auto_compile: false   # 內部更新通常不編譯執行檔
 
-  build_windows:
-    if: ${{ inputs.build_windows }}
-    needs: summary_inputs # 等 summary 跑完再開始
+  # 💡 如果你之後需要拿那個 Build Number 做後續處理，可以加這一步
+  after_build:
+    needs: call_build_bundle
     runs-on: [self-hosted]
     steps:
-      - name: check out
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          lfs: true
-          clean: false
-
-      - name: Build Bundle(Windows)
-        uses: ./.github/actions/update-bundles
-        with:
-          git_token: ${{ github.token }} 
-          force_clean: false
-          environment: ${{ inputs.environment }}
-          platform: windows
-          dev_mode: true
-          auto_compile: false
-          version_name: ${{ inputs.version_name }}
-
-  build_ios:
-    needs: build_windows # 建議串聯執行，避免 self-hosted 同時跑多個打包任務導致 CPU 炸裂
-    if: always() && inputs.build_ios # 即使前一個 windows 沒跑或失敗，只要勾選 ios 也要跑
-    runs-on: [self-hosted]
-    steps:
-      - name: check out
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          lfs: true
-          clean: false
-
-      - name: Build Bundle(iOS)
-        uses: ./.github/actions/update-bundles
-        with:
-          git_token: ${{ github.token }} 
-          force_clean: false
-          environment: ${{ inputs.environment }}
-          platform: ios
-          dev_mode: true
-          auto_compile: false
-          version_name: ${{ inputs.version_name }}
-
-  build_android:
-    needs: [summary_inputs, build_ios] # 確保最後跑
-    if: always() && inputs.build_android
-    runs-on: [self-hosted]
-    steps:
-      - name: check out
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          lfs: true
-          clean: false
-
-      - name: Build Bundle(Android)
-        uses: ./.github/actions/update-bundles
-        with:
-          git_token: ${{ github.token }} 
-          force_clean: false
-          environment: ${{ inputs.environment }}
-          platform: android
-          dev_mode: true
-          auto_compile: false
-          version_name: ${{ inputs.version_name }}
+      - name: 顯示最終號碼
+        run: echo "剛剛完成的打包序號是：${{ needs.call_build_bundle.outputs.final_build_number }}"
