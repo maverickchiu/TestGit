@@ -1,5 +1,7 @@
 name: 外部建置工具
 
+run-name: 🚀 [production] 版本:${{ inputs.version_name }} 由 @${{ github.actor }} 觸發
+
 on:
   workflow_dispatch:
     inputs:
