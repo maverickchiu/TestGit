@@ -60,10 +60,13 @@ jobs:
       dev_mode: true        # 這裡可以寫死或也改成 input
       auto_compile: false   # 內部更新通常不編譯執行檔
 
-  # 💡 如果你之後需要拿那個 Build Number 做後續處理，可以加這一步
   after_build:
     needs: call_build_bundle
+    if: always() # 確保即便失敗也顯示一下
     runs-on: [self-hosted]
     steps:
-      - name: 顯示最終號碼
-        run: echo "剛剛完成的打包序號是：${{ needs.call_build_bundle.outputs.final_build_number }}"
+      - name: Show Final Build Number
+        shell: bash # 💡 強制使用 bash 避免 PowerShell 亂碼
+        run: |
+          echo "Build Process Completed."
+          echo "Final Build Number is: ${{ needs.call_build_bundle.outputs.final_build_number }}"
