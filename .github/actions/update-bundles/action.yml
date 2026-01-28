@@ -41,6 +41,17 @@ runs:
     - name: Install Packages
       uses: ./.github/actions/install-packages
 
+    - name: Build Bundle
+      uses: ./.github/actions/build-core
+      with:
+        git_token: ${{ github.token }} 
+        force_clean: false
+        environment: ${{ inputs.environment }}
+        platform: ${{ inputs.platform }}
+        dev_mode: ${{ inputs.dev_mode }}
+        auto_compile: false
+        version_name: ${{ inputs.version_name }}
+
     - name: Upload Bundle
       uses: ./.github/actions/upload-bundles
       with:
