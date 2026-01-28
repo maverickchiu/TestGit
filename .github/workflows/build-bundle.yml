@@ -1,0 +1,138 @@
+name: 資源打包工具
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: '環境'
+        required: true
+        default: 'development'
+        type: string 
+      version_name:
+        description: '版本名稱'
+        required: true
+        default: '1.2.12'
+        type: string
+      build_windows:
+        description: '打包Windows環境'
+        required: true
+        default: true
+        type: boolean
+      build_android:
+        description: '打包Android環境'
+        required: true
+        default: true
+        type: boolean
+      build_ios:
+        description: '打包iOS環境'
+        required: true
+        default: true
+        type: boolean
+      dev_mode:
+        description: '開發者模式'
+        required: true
+        default: true
+        type: boolean
+      auto_compile:
+        description: '是否產生執行檔'
+        required: true
+        default: false
+        type: boolean
+    outputs:
+      final_build_number:
+        description: "這次打包使用的序號"
+        value: ${{ jobs.write_build_number.outputs.out_num }}
+
+jobs:
+  write_build_number:
+    runs-on: [self-hosted]
+    outputs:
+      out_num: ${{ steps.step1.outputs.num }}
+    steps:
+      - name: Generate Number
+        id: step1
+        run: echo "num=${{ github.run_number }}" >> $GITHUB_OUTPUT
+
+      - name: Log Number
+        run: echo "正在使用序號 ${{ github.run_number }} 打包"
+
+  summary_inputs:
+    needs: write_build_number
+    runs-on: [self-hosted] # 必須指定 runner
+    steps:
+      - name: Checkout for Summary Action
+        uses: actions/checkout@v4 # 必須先 checkout 才能使用本地的 summary-inputs action
+      
+      - name: Summary Inputs
+        uses: ./.github/actions/summary-inputs
+        with:
+          all_inputs: ${{ toJSON(inputs) }}
+
+  build_windows:
+    if: ${{ inputs.build_windows }}
+    needs: [summary_inputs, write_build_number] 
+    runs-on: [self-hosted]
+    steps:
+      - name: check out
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          lfs: true
+          clean: false
+
+      - name: Build Bundle(Windows)
+        uses: ./.github/actions/update-bundles
+        with:
+          git_token: ${{ github.token }} 
+          force_clean: false
+          environment: ${{ inputs.environment }}
+          platform: windows
+          dev_mode: ${{ inputs.dev_mode }}
+          auto_compile: ${{ inputs.auto_compile }}
+          version_name: ${{ inputs.version_name }}
+
+  build_ios:
+    needs: [build_windows, write_build_number] 
+    if: always() && inputs.build_ios # 即使前一個 windows 沒跑或失敗，只要勾選 ios 也要跑
+    runs-on: [self-hosted]
+    steps:
+      - name: check out
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          lfs: true
+          clean: false
+
+      - name: Build Bundle(iOS)
+        uses: ./.github/actions/update-bundles
+        with:
+          git_token: ${{ github.token }} 
+          force_clean: false
+          environment: ${{ inputs.environment }}
+          platform: ios
+          dev_mode: ${{ inputs.dev_mode }}
+          auto_compile: ${{ inputs.auto_compile }}
+          version_name: ${{ inputs.version_name }}
+
+  build_android:
+    needs: [summary_inputs, build_ios, write_build_number]
+    if: always() && inputs.build_android
+    runs-on: [self-hosted]
+    steps:
+      - name: check out
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          lfs: true
+          clean: false
+
+      - name: Build Bundle(Android)
+        uses: ./.github/actions/update-bundles
+        with:
+          git_token: ${{ github.token }} 
+          force_clean: false
+          environment: ${{ inputs.environment }}
+          platform: android
+          dev_mode: ${{ inputs.dev_mode }}
+          auto_compile: ${{ inputs.auto_compile }}
+          version_name: ${{ inputs.version_name }}
