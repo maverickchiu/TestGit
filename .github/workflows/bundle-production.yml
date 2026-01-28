@@ -1,6 +1,6 @@
 name: 外部資源更新
 
-run-name: 🚀 [production] 版本:${{ inputs.version_name }} 由 @${{ github.actor }} 觸發
+run-name: 🚀 "環境:production | 版號:${{ inputs.version_name }} | 分支:${{ github.ref_name }} "
 
 on:
   workflow_dispatch:

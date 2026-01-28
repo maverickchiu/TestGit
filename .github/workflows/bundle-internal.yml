@@ -1,6 +1,6 @@
 name: 內部資源更新
 
-run-name: 🚀 [${{ inputs.environment }}] 版本:${{ inputs.version_name }} 由 @${{ github.actor }} 觸發
+run-name: 🚀 "環境:${{ inputs.environment }} | v${{ inputs.version_name }} | 分支:${{ github.ref_name }} (Win:${{ inputs.build_windows }}, Android:${{ inputs.build_android }}, iOS:${{ inputs.build_ios }})"
 
 on:
   workflow_dispatch:
