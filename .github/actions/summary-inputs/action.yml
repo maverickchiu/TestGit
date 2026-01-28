@@ -15,6 +15,7 @@ runs:
         PYTHONUTF8: "1"
         INPUTS_JSON: ${{ inputs.all_inputs }}
       run: |
+        # -*- coding: utf-8 -*-
         import os
         import json
 
