@@ -1,13 +1,13 @@
 {
-  "buildCode": "33",
+  "buildCode": "34",
   "bundleInfos": [
     {
       "name": "girls",
-      "version": "90e80",
+      "version": "6f30a",
       "items": [
         {
-          "relative": "cc.config.90e80.json",
-          "md5": "271a4bb154786b57668f0d38bd5379ea"
+          "relative": "cc.config.6f30a.json",
+          "md5": "7a04162d334adceeeb92287c7782cc3a"
         },
         {
           "relative": "import/06/06f8e3702.a1097.json",
@@ -50,24 +50,24 @@
           "md5": "c16a8f853c64bf39777846c27bfac37d"
         },
         {
-          "relative": "import/96/963d73c9-0b52-4895-996f-352bc2c6ce0e@f9941.74095.json",
-          "md5": "74095db382e63bcc51b397afe2aaefd2"
+          "relative": "import/96/963d73c9-0b52-4895-996f-352bc2c6ce0e@f9941.8bde1.json",
+          "md5": "8bde1e9bde59248fb4dc75e93b4c2cb8"
         },
         {
           "relative": "import/97/97662679-e5c2-4fcf-a237-2c2bf97ee651.c16a8.json",
           "md5": "c16a8f853c64bf39777846c27bfac37d"
         },
         {
-          "relative": "import/97/97662679-e5c2-4fcf-a237-2c2bf97ee651@f9941.fd72d.json",
-          "md5": "fd72dc688afe24a0cccb352c9ebae1c9"
+          "relative": "import/97/97662679-e5c2-4fcf-a237-2c2bf97ee651@f9941.ef371.json",
+          "md5": "ef3715ece9eeef6b91fe7d9cdb3c7456"
         },
         {
           "relative": "import/9b/9baf1c7c-00ef-4d8d-a49a-1c3dcca92d9c.c16a8.json",
           "md5": "c16a8f853c64bf39777846c27bfac37d"
         },
         {
-          "relative": "import/9b/9baf1c7c-00ef-4d8d-a49a-1c3dcca92d9c@f9941.33e21.json",
-          "md5": "33e2152084c857d55ea419d266d5cf20"
+          "relative": "import/9b/9baf1c7c-00ef-4d8d-a49a-1c3dcca92d9c@f9941.41411.json",
+          "md5": "41411814ea803e939e037e937c274444"
         },
         {
           "relative": "import/af/afd9253c-9219-4c49-b04b-44323980f73a.c16a8.json",
@@ -90,7 +90,7 @@
           "md5": "02116e3617c1fc75df159c0cb19f4ff7"
         },
         {
-          "relative": "index.90e80.js",
+          "relative": "index.6f30a.js",
           "md5": "603f70f64cde552ce0eecaffa9170d08"
         },
         {
