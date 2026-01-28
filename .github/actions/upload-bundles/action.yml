@@ -28,6 +28,12 @@ inputs:
     default: true
     type: boolean
 
+  version_name:
+    description: '版本名稱'
+    required: true
+    default: '1.2.12'
+    type: string
+
 runs:
   using: "composite" 
   steps:  
