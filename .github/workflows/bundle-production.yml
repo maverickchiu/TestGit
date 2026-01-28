@@ -17,7 +17,7 @@ concurrency:
 jobs:
   # 直接接力給核心打包程式
   call_core_build:
-    uses: ./.github/workflows/build_bundle.yml
+    uses: ./.github/workflows/build-bundle.yml
     with:
       environment: 'production'      # 外部更新固定為 production
       version_name: ${{ inputs.version_name }}

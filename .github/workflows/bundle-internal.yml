@@ -50,7 +50,7 @@ concurrency:
 jobs:
   # 💡 現在這個入口 Job 只需要「呼叫」副程式
   call_build_bundle:
-    uses: ./.github/workflows/build_bundle.yml # 指向你的副程式檔案
+    uses: ./.github/workflows/build-bundle.yml 
     with:
       environment: ${{ inputs.environment }}
       version_name: ${{ inputs.version_name }}
